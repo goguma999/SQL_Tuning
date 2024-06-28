@@ -1,0 +1,78 @@
+▣▣ 튜닝예제3. 실행계획의 종류 2가지를 알아야합니다. 
+
+ 1. 예상 실행 계획 ?  SQL 을 실행하기 전에 옵티마이져가 생성한 실행계획
+ 2. 실제 실행 계획 ?  SQL 을 실제로 실행할 때 사용한 실제 실행계획 
+
+ 그럼 언제 예상 실행계획을 보고 언제 실제 실행계획을 봐야하는가?
+
+ 답:  튜닝해야할 쿼리문이 너무 오래돌면 예상 실행계획을 보고
+       어느정도 기다릴 수 있는 쿼리문이면 실제 실행계획을 봅니다. 
+
+▣ 1. 예상 실행계획 보는 방법
+
+  explain  plan  for 
+       select  deptno, job, sum(sal)
+       from  emp
+       group  by  grouping  sets( (deptno), (job) );
+
+      select  * from  table(dbms_xplan.display);
+
+▣ 2. 실제 실행계획 보는 방법 
+
+    select /*+ gather_plan_statistics */  deptno, job, sum(sal)
+       from  emp
+       group  by  grouping  sets( (deptno), (job) );
+
+      select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 실제 실행계획을 보는 이유가 버퍼의 갯수가 나와서 튜닝전과 튜닝후를 
+ 비교해줄 수 있습니다. 
+
+문제5.  아래의 SQL의 튜닝전 SQL의 버퍼의 갯수와 튜닝후 SQL의 버퍼의 갯수를
+          비교해서 고객에게 메일로 보내시오 !
+
+ create  index  emp_job   on  emp(job);
+
+ 튜닝전:   select  /*+ gather_plan_statistics  */  ename, job
+                from  emp
+                where  substr(job, 1, 5)='SALES';
+
+      select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+
+튜닝후:  
+        select  /*+ gather_plan_statistics  */  ename, job
+                from  emp
+                where   job   like  'SALES%';
+
+      select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+문제6. 아래의 SQL을 튜닝하시오 !
+
+  create  index  emp_hiredate   on  emp(hiredate);
+
+ 튜닝전:  select /*+ gather_plan_statistics */  ename,  hiredate
+               from  emp
+               where  to_char(hiredate,'RRRR') = '1980';
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 
+  튜닝후:  select /*+ gather_plan_statistics */  ename,  hiredate
+               from  emp
+               where  hiredate  between  to_date('1980/01/01', 'RRRR/MM/DD')
+                                      and  to_date('1980/12/31', 'RRRR/MM/DD') + 1;
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+  설명:  + 1 을 해주는 이유가 1980년 12월 31일 00시 00분 00초 이기 때문에
+           하루를 더해준겁니다. 
+
+  select /*+ gather_plan_statistics */  ename,  hiredate
+               from  emp
+               where  hiredate  >=  to_date('1980/01/01', 'RRRR/MM/DD')
+                and hiredate < to_date('1981/01/01','RRRR/MM/DD');
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 설명:  튜닝전에 버퍼의 갯수 7개였는데 튜닝후에는 2개입니다.

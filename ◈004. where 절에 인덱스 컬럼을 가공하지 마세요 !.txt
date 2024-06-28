@@ -1,0 +1,92 @@
+▣▣ 튜닝예제4.  where 절에 인덱스 컬럼을 가공하지 마세요 !
+
+ where 절에 인덱스 컬럼을 가공하게되면 full  table scan 을 하게 됩니다. 
+
+▣ 관련 예제
+
+  create  index  emp_sal  on  emp(sal);
+
+  튜닝전:  select  /*+ gather_plan_statistics */ ename, sal
+                from  emp
+                where  sal * 12  = 36000;
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+  튜닝후:   select  /*+ gather_plan_statistics */ ename, sal
+                from  emp
+                where  sal   = 36000 / 12;
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 설명: 버퍼의  갯수가 7개에 2개로 줄었습니다. 
+
+문제7. 아래의 SQL 을 튜닝하시오 !
+
+ 명령 프롬프트 창에서 @demo.sql 를 수행합니다. 
+ 
+  create  index  emp_ename  on  emp(ename);
+  create  index  emp_sal  on  emp(sal);
+
+튜닝전 :  select /*+ gather_plan_statistics */  ename, sal, job
+              from  emp
+              where   ename || sal   = 'SCOTT3000';
+
+  select  * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+튜닝후:      select /*+ gather_plan_statistics */ ename, sal, job
+                 from emp
+                where ename='SCOTT' and sal=3000;
+
+    select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+
+문제8. 아래의 SQL 을 튜닝하시오 !
+
+ 명령 프롬프트 창에서 @demo.sql 를 수행합니다. 
+ 
+ create  index  emp_job  on  emp(job);
+ create  index  emp_deptno  on  emp(deptno);
+
+튜닝전:    select /*+ gather_plan_statistics */  ename, sal, job
+                from  emp
+                where  job || deptno = 'SALESMAN30';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+
+튜닝후:  select  /*+ gather_plan_statistics */  ename, sal, job
+                from  emp
+                where  job='SALESMAN'  and  deptno = 30; 
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+문제9. /*+ gather_plan_statistics */ 힌트 없이 실제 실행계획에서 버퍼의 갯수를
+         볼 수 있도록 설정하시오 !
+
+명령 프롬프트창을 열고   sys 유져로 접속해서 수행하세요 !
+
+ statistics_level 이라는 파라미터가 default 값이 typical 인데 이를 all 로 변경하면
+ 앞으로 힌트 /*+ gather_plan_statistics */ 를 쓰지 않아도 됩니다. 
+
+SQL> connect sys/oracle_4U as sysdba
+연결되었습니다.
+
+SQL> alter   system  set  statistics_level=all  ;
+
+SQL> shutdown immediate
+ 
+SQL> startup 
+
+SQL> show  parameter  statistics_level 
+
+SQL> connect c##scott/tiger
+
+문제10. 힌트 /*+ gather_plan_statistics */ 쓰지 않고 실제 실행계획을 봐보시오 !
+
+  select  ename, sal, job
+    from  emp
+    where  job || deptno = 'SALESMAN30';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 버퍼의 갯수 나오는지 봐보세요 ~

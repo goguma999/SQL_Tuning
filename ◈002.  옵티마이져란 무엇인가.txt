@@ -1,0 +1,54 @@
+
+▣▣ 튜닝예제2.  옵티마이져가 뭔지 알아야해요 
+
+ 옵티마이져(optimizer) 란?  SQL을 가장 효율적이고 빠르게 수행할 수 있는
+                                     최적의 처리경로를 선택해주는 오라클 핵심 엔진입니다.
+
+ 
+ 설명 그림: https://cafe.daum.net/oracleoracle/SoqJ/4
+
+ SQL 이 들어오면 Query transformer 가 SQL을 변경을 합니다. 
+ 변경이 필요없으면 안하고 변경이 필요하면 변경을 합니다.
+ 그리고 나서 estimator 가 데이터 딕셔너리(user_tables) 를 보고
+ 해당 테이블의 통계정보를 이용해서 실행계획을 plan generator 에게
+ 만들 수 있도록 합니다. 
+
+문제3.  아래의 SQL을 query transformer 가 어떻게 변경했는지 확인하시오 !
+
+ 이걸 확인하는 이유 ?  내가 원하는 실행계획이 안나오는 경우에 확인이 필요합니다.
+
+ select ename, sal, job
+   from  emp
+   where  job  in ( 'SALESMAN', 'ANALYST');
+
+답:  
+    explain  plan  for
+     select ename, sal, job
+       from  emp
+       where  job  in ( 'SALESMAN', 'ANALYST');
+
+     select * from table(dbms_xplan.display);
+
+
+   1 - filter("JOB"='ANALYST' OR "JOB"='SALESMAN')  <-- 이게 보일겁니다. 
+
+   select  ename, sal, job
+     from  emp
+     where  job ='ANALYST'  or  job='SALESMAN'; 
+
+  결과가 달라지지 않으면서 비용이 적게드는 SQL로 변경을 스스로 합니다. 
+
+문제4.  아래의 SQL을 어떻게 쿼리 변형을 했는지 확인하시오 !
+
+ select  deptno, job, sum(sal)
+   from  emp
+   group  by  grouping  sets( (deptno), (job) );
+
+답:  explain  plan  for 
+       select  deptno, job, sum(sal)
+       from  emp
+       group  by  grouping  sets( (deptno), (job) );
+
+      select  * from  table(dbms_xplan.display);
+
+설명: temp  table transformation 이라고 나오면 with 절로 쿼리를 변형한겁니다.

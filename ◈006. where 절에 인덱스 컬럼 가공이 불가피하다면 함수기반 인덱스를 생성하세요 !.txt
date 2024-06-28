@@ -1,0 +1,66 @@
+▣▣ 튜닝예제6. where 에 인덱스 컬럼 가공이 불가피하다면 함수기반 인덱스를 생성하세요 !
+
+@demo
+insert  into  emp(empno, ename, sal)  values( 1111, '  jack  ', 3000 );
+create  index  emp_ename  on  emp(ename);
+
+튜닝전:   select  ename, sal
+             from emp
+             where  trim(ename)='jack';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+튜닝후:  create  index  emp_ename_func
+              on  emp(trim(ename)); 
+
+ select  ename, sal
+             from emp
+             where  trim(ename)='jack';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+문제12.  아래의 SQL을 튜닝하시오 ! (SQL 전문가 시험 출제 문제)
+
+-- 환경구성 
+@demo
+create  index  emp_ename  on  emp(ename);
+
+튜닝전:  select  ename, sal
+              from  emp
+              where  ename  like  '%EN%'  or  ename  like  '%IN%';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+ 설명: 와일드카드(%) 가 앞에 있으면 무조건 FULL TABLE SCAN 입니다.
+
+튜닝후:   create  index  emp_ename_reg
+              on  emp regexp_like( ename, '(EN|IN)') ; 
+
+select  /*+ index(emp emp_ename_reg) */ ename, sal
+              from  emp
+              where  regexp_like( ename, '(EN|IN)' ); 
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+설명:  /*+ index(테이블 인덱스이름) */  이렇게 힌트를 주면 인덱스를 스캔합니다.
+
+문제13. 아래의 SQL을 튜닝하시오 !
+
+create  index emp19_ename  on  emp19(ename);
+
+튜닝전:  select  ename, age
+              from  emp19
+              where   ename  like '%연우%'  or
+                        ename   like '%진우%'  or
+                        ename   like  '%동현%';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+튜닝후:   create  index  emp19_ename_reg
+             on  emp19  regexp_like( ename, '(연우|진우|동현)') ; 
+
+            select  /*+ index(emp19 emp19_ename_reg) */ ename, age
+                from  emp19
+               where  regexp_like(ename, '(연우|진우|동현)');
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));

@@ -1,0 +1,46 @@
+▣▣ 튜닝예제5. having 절에 일반 검색조건을 쓰지 마세요.
+
+ having 절은 group 함수로 검색조건을 줄때만 사용해야합니다.
+ 일반 검색조건을 주게 되면 인덱스를 엑세스 하지 못하게 됩니다. 
+
+▣ 관련 예제
+
+ 명령 프롬프트 창에서 @demo 를 수행합니다. 
+
+ create  index  emp_job  on  emp(job);
+
+튜닝전:  select  job, sum(sal)
+             from  emp
+             group  by  job
+             having  sum(sal) > 5000  and  job='SALESMAN';
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+튜닝후:  select  job, sum(sal)
+             from  emp
+             where  job='SALESMAN'
+             group  by  job
+             having sum(sal) > 5000;
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+문제11.  아래의 SQL을 튜닝하시오 !
+
+@demo
+create  index  emp_deptno  on  emp(deptno);
+
+튜닝전:  select  deptno, avg(sal)
+             from   emp
+             group  by  deptno
+             having  avg(sal) > 2000  and  deptno = 20;
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
+튜닝후:  select  deptno, avg(sal)
+            from  emp
+            where  deptno = 20
+            group  by  deptno
+            having  avg(sal) > 2000;
+
+select * from  table(dbms_xplan.display_cursor(null, null, 'ALLSTATS LAST'));
+
