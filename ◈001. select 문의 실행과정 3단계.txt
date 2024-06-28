@@ -1,0 +1,92 @@
+## [001] select 문의 실행과정 3단계를 먼저 알아야해요.
+
+- select 문의 처리과정
+
+```sql
+select ename, sal
+  from emp
+  where ename = 'SCOTT' ; 
+```
+
+1. 파싱(Parsing) : SQL을 기계어로 변환하는 작업
+2. 실행(execute) : 실행계획대로 검색하는 데이터를 DB에서 찾는 과정
+3. 패치(fetch) : DB에서 찾은 결과를 SQL을 수행한 유져 프로세서에게 전달
+
+회사 내 노트북 —————————- 서버실
+
+클라이언트 ——————————— 서버
+
+sqldeveloper만 있으면 됨 ————— database가 있음
+
+유져 프로세서 ———— (SQL) ———- 서버프로세서
+
+문제1. 실제로 회사에 가면 내 노트북에서 회사 서버실에 오라클 데이터베이스에 어떻게 접속을 하는가 ? 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/08691aea-b5b9-4275-80cd-5d0d824962f4/ea099899-0201-4ff7-ba94-6359044de668/Untitled.png)
+
+tnsnames.ora ←— 내가 접속할 오라클 db의 정보를 등록해줍니다.
+
+(tns정보 찾는법)
+
+```sql
+(cmd)
+> lsnrctl status
+```
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/08691aea-b5b9-4275-80cd-5d0d824962f4/fc9a37c2-2e0b-46e6-b451-e720b2590ec7/Untitled.png)
+
+→ 리스너 로그 파일 에 listener.ora가 있는 곳으로 갑니다. tnsnames.ora가 있는 곳 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/08691aea-b5b9-4275-80cd-5d0d824962f4/dea8c16b-5394-45d4-b28c-0b4059462284/Untitled.png)
+
+→ tnsnames.ora를 메모장으로 엽니다. 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/08691aea-b5b9-4275-80cd-5d0d824962f4/c638c9d0-467c-4d48-b938-3a751eb42f3d/Untitled.png)
+
+- XE : tns별칭
+- localhost : 서버의 아이피 주소
+- SERVICE_NAME = xe
+
+xe = 
+
+(DESCRIPTION = 
+
+(ADDRESS = ~
+
+이거를 담당자가 줌. 이거를 tns에 붙여넣으면 됨
+
+```sql
+윈도우 탐색기 —> 
+내pc에서 오른쪽 마우스를 누르고 속성 —>
+고급 시스템 설정 —> 
+환경변수 —> 
+아래쪽 시스템 변수에 새로 만들기 —> 
+변수이름=TNS_ADMIN(대문자필), 변수값=tns.ora있던 위치 주소 복사 —> 
+확인*3 —> 
+sqldeveloper 껐다 키기 —> 
+새로만들기—> my_db & TNS & xe 
+접속—> 
+```
+
+문제2. 짝꿍 pc의 오라클 데이터베이스에 c##scott 유져로 접속하시오 ! 
+
+```sql
+나의 tnsnames.ora의 별칭의 이름을 내 영문 이니셜로 변경합니다. 
+
+sqldeveloper 껐다가 키고 그 tns로 들어감 
+```
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/08691aea-b5b9-4275-80cd-5d0d824962f4/3326018d-c0c5-479d-b978-88435e61d235/Untitled.png)
+
+```sql
+짝꿍의 정보를 받습니다. 
+tns 맨 아래에 짝꿍 정보를 붙여넣습니다. 
+방화벽을 해제합니다.
+새로만들기로 접속 ! 
+나올 땐 방화벽 닫기 
+```
+
+<aside>
+📌 만약 어느 회사에 db분석을 하러 갔으면 담당자에게 db에 접속할 수 있는 tnsnames.ora에 등록할 tns 정보를 주세요 ~ 라고 얘기하면 무슨말인지 알아듣고 알려줍니다.
+
+</aside>
