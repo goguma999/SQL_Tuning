@@ -5,8 +5,12 @@
 <img src="https://github.com/goguma999/newjourney/blob/main/001.png?raw=true" width=600 height=400>
 
 &nbsp;
+## 공략집 요약
+...ing
 
-## 공략집 목차 ( ☀️ 2024년 6월 29일 updated)
+&nbsp; 
+
+## 공략집 목차 (☀️ 2024년 6월 29일 updated)
 
 **◈ 001. select문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
   
