@@ -8,9 +8,9 @@
 
 ## 공략집 목차 ( ☀️ 2024년 6월 29일 updated)
 
-**◈ 001. select문의 실행과정 3단계**:  📄[노트](https://github.com/goguma999/newjourney/blob/main/%E2%97%88001.%20select%20%EB%AC%B8%EC%9D%98%20%EC%8B%A4%ED%96%89%EA%B3%BC%EC%A0%95%203%EB%8B%A8%EA%B3%84%26%EC%98%A4%EB%9D%BC%ED%81%B4%20db%20%EC%A0%91%EC%86%8D%ED%95%98%EA%B8%B0.md)
+**◈ 001. select문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
   
-**◈ 002. 옵티마이져란 무엇인가 ?**: 📄 [노트]((https://www.notion.so/002-2f4cf8113f4f4d75a326f11f01cf6c01?pvs=21)
+**◈ 002. 옵티마이져란 무엇인가 ?**: 📄 [노트](https://www.notion.so/002-2f4cf8113f4f4d75a326f11f01cf6c01?pvs=21)
   
 **◈ 003. 실행계획의 종류 3가지 ?**: 📄[노트](https://www.notion.so/003-2-99d5f15e44af4534a30fe326d515ef8b?pvs=21)
 
