@@ -6,7 +6,7 @@
 
 &nbsp;
 ## 공략집 요약
-...ing
+🔌[코드 바로가기](https://github.com/goguma999/SQL_Tuning/blob/main/tuning.md)
 
 &nbsp; 
 
