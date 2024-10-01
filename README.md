@@ -1,10 +1,8 @@
-# 🔨SQL 튜닝 공략집🔨  
-(뚝딱뚝딱) 실전에서 바로 써먹을 수 있는 오라클 SQL튜닝 수업 내용을 정리하였습니다. 
-
-
-<img src="https://github.com/goguma999/newjourney/blob/main/001.png?raw=true" width=600 height=400>
+# SQL 튜닝 공략집  
+실전에서 바로 써먹을 수 있는 오라클 SQL튜닝 수업 내용을 정리하였습니다. 
 
 &nbsp;
+
 ## 공략집 요약
 🔌[코드 바로가기](https://github.com/goguma999/SQL_Tuning/blob/main/tuning.md)
 
