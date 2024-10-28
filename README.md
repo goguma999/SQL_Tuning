@@ -1,7 +1,6 @@
-## SQL, SQL 튜닝 수업 노트 
-📄[노션 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4)
-
-&nbsp;
+## SQL, SQL 튜닝 수업 노트
+DDL, DML, Subquery, JOIN, Tuning 등 SQL 기초~심화 수업 후 정리한 노트입니다.   
+📌[노션 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4)
 
 &nbsp; 
 
