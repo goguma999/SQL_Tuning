@@ -1,14 +1,11 @@
-# SQL 튜닝 공략집  
-실전에서 바로 써먹을 수 있는 오라클 SQL튜닝 수업 내용을 정리하였습니다. 
+## SQL, SQL 튜닝 수업 노트 
+📄[노션 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4)
 
 &nbsp;
 
-## 공략집 요약
-🔌[코드 바로가기](https://github.com/goguma999/SQL_Tuning/blob/main/tuning.md)
-
 &nbsp; 
 
-## 목차
+## SQL 튜닝 목차
 
 **◈ 001. select문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
   
