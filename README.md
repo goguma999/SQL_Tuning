@@ -7,7 +7,7 @@ DDL, DML, Subquery, JOIN, Tuning 등 SQL 기초~심화 수업 후 정리한 노�
 
 ## SQL 튜닝 목차
 
-**• 001. select문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
+**▪︎ 001. select문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
   
 **◈ 002. 옵티마이져란 무엇인가 ?**: 📄 [노트](https://www.notion.so/002-2f4cf8113f4f4d75a326f11f01cf6c01?pvs=21)
   
