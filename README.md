@@ -1,11 +1,11 @@
-## SQL, SQL 튜닝 수업 노트
+## SQL 수업 노트
 DDL, DML, Subquery, JOIN, Tuning 등 SQL 기초~심화 수업 후 정리한 노트입니다.<br>
-교재: 초보자를 위한 SQL 200제 (PL/SQL)<br> 
-📌[노션 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4)
+- 교재: 초보자를 위한 SQL 200제 (PL/SQL)<br> 
+- 📌[노션 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4)
 
 &nbsp; 
 
-## SQL 튜닝 목차
+## SQL 튜닝 수업 노트
 
 **▪︎  001. SELECT문의 실행과정 3단계**:  📄[노트](https://www.notion.so/001-select-3-db-83e00fa0d6f246b887985901ce869a3a)
   
