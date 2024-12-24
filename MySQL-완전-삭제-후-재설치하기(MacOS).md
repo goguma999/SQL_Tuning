@@ -1,11 +1,11 @@
-## MySQL 완전 삭제 후 재설치하기(MacOS)
-### MySQL 프로세스 확인
+# MySQL 완전 삭제 후 재설치하기(MacOS)
+## MySQL 프로세스 확인
 (homebrew로 설치했을 경우)<br>
 ```
 brew services list
 brew services stop mysql
 ```
-### MySQL 삭제하기
+## MySQL 삭제하기
 설치 경로 확인하기<br>
 ```
 which mysql
@@ -36,7 +36,10 @@ brew cleanup mysql
 brew cleanup --prune=all
 ```
 완료 후 컴퓨터를 재부팅한다.<br>
-### MySQL Community Server 8.0.4 버전으로 설치
-https://dev.mysql.com/downloads/mysql/ <br>
-macOS14(ARM, 64-bit), DMG Archive <br> 
-### MySQL Workbench 설치 
+## homebrew로 재설치하기
+```
+brew install mysql
+mysql --version
+brew services start mysql
+brew services list
+```
