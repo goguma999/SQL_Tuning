@@ -36,3 +36,4 @@ brew cleanup mysql
 brew cleanup --prune=all
 '''
 완료 후 컴퓨터를 재부팅한다.
+### MySQL Community Server 8.0.4 버전으로 재설치
