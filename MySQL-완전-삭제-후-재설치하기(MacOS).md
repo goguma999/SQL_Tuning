@@ -69,7 +69,7 @@ Disallow root login remotely? - Y
 ```
 Remove test database and access to it? - Y
 ```
-5. 현재까지의 변경사항 즉시 적용ㄷ
+5. 현재까지의 변경사항 즉시 적용
 ```
 Reload privilege tables now? - Y
 ```
