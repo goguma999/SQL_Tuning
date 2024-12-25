@@ -53,21 +53,24 @@ brew services list
 mysql_secure_installation
 ```
 1. 비밀번호 복잡도 검사<br>
-VALIDATE PASSWORD COMPONENT can be used to test passwords  
-and improve security. It checks the strength of password  
-and allows the users to set only those passwords which are  
-secure enough. Would you like to setup VALIDATE PASSWORD component?  - NO
+```
+Would you like to setup VALIDATE PASSWORD component?  - NO
 Change the password for root ? - NO
-&nbsp;
+```
 2. 익명의 사용자 삭제<br>
+```
 Remove anonymous users? - Y
-&nbsp;
+```
 3. root계정 원격 접속 차단<br>
+```
 Disallow root login remotely? - Y
-&nbsp;
-4. Remove test database and access to it? - Y
-&nbsp;
-5. Reload privilege tables now? - Y
-&nbsp;
-
+```
+4. 테스트 데이터베이스 삭제
+```
+Remove test database and access to it? - Y
+```
+5. 현재까지의 변경사항 즉시 적용ㄷ
+```
+Reload privilege tables now? - Y
+```
 
