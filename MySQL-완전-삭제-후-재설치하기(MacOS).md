@@ -5,6 +5,11 @@
 brew services list
 brew services stop mysql
 ```
+(다운로드 파일로 설치했을 경우)<br>
+```
+시스템 환경설정 -> MySQL
+"STOP MySQL Server"
+```
 ## MySQL 삭제하기
 설치 경로 확인하기<br>
 ```
