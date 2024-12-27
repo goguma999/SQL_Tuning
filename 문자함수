@@ -1,0 +1,31 @@
+# 문자함수(MySQL, Oracle)
+| MySQL                      | Oracle SQL             |
+|------------------------------|--------------------------|
+| `LENGTH(str)`               | `LENGTH(str)`           |
+| `UPPER(str)`                | `UPPER(str)`            |
+| `LOWER(str)`                | `LOWER(str)`            |
+| -                           | `INITCAP(str)`            |
+| `SUBSTRING(str, pos, len)`  | `SUBSTR(str, pos, len)` |
+| `LEFT(str, len)`            | `SUBSTR(str, 1, len)` |
+| `RIGHT(str, len)`           | `SUBSTR(str, -len)` |
+| `TRIM([chars] FROM str)`    | `TRIM([chars] str)`|
+| `LTRIM(str)`                | `LTRIM(str,'잘라낼철자')`            |
+| `RTRIM(str)`                | `RTRIM(str,'잘라낼철자')`            |
+| `LPAD(str, len, padstr)`    | `LPAD(str, len, padstr)`|
+| `RPAD(str, len, padstr)`    | `RPAD(str, len, padstr)`|
+| `CONCAT(str1, str2, ...)`   | `CONCAT(str1, str2, ...)`,`||` |
+| `LOCATE(substr, str)`       | `INSTR(str, substr)`    |
+| `REPLACE(str, from, to)`    | `REPLACE(str, from, to)`|
+| `REPEAT(str, count)`        | `RPAD(str, LENGTH(str) * count, str)` |
+| `REVERSE(str)`              | -                      |
+| `STRCMP(str1, str2)`        | `COMPARE(str1, str2)`   |
+| -                            | `REGEXP_SUBSTR`         |
+
+## STRCMP
+0: 두 문자열이 같을 때<br>
+-1: 첫 번째 문자열이 두 번째 문자열보다 작을 때
+1: 첫 번째 문자열이 두 번째 문자열보다 클 때
+```sql 
+SELECT STRCMP('apple','banana') AS result;
+# 1
+```
