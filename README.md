@@ -1,5 +1,5 @@
 ## SQL (MySQL)
-📌[노트 바로가기](https://github.com/goguma999/TIL/tree/main/mysql)
+📌[노트 바로가기](MySQL)
 
 &nbsp;
 
