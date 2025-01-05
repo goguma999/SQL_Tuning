@@ -1,4 +1,3 @@
-# ANSI JOIN
 ## INNER JOIN 
 ```sql
 SELECt *
