@@ -15,7 +15,7 @@ ON A.number = B.number;
 ```
 
 ## OUTER JOIN 
-- MySQL에서는 LEFT JOIN + UNION RIGHT JOIN 해야함 
+- MySQL에서는 LEFT JOIN + UNION + RIGHT JOIN 해야함 
 ```sql
 SELECT *
 FROM mypokemon A
