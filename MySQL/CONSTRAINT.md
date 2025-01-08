@@ -80,7 +80,7 @@ CREATE TABLE new_mypokemon(
 CREATE TABLE new_mypokemon(
 	number INT,
 	name VARCHAR(20),
-  CONSTRAINT unique_name UNIQUE (name) 
+  	CONSTRAINT unique_name UNIQUE (name) 
   );
 ```
 - 만들어진 테이블에 추가
@@ -102,10 +102,10 @@ DROP INDEX name;
 - 테이블 만들 때 생성
 ```sql
 Create table new_mypokemon(
-number INT,
-name VARCHAR(20) UNIQUE,
-type VARCHAR(10) NOT NULL
-);
+	number INT,
+	name VARCHAR(20) UNIQUE,
+	type VARCHAR(10) NOT NULL
+	);
 ```
 - 만들어진 테이블에 추가
 ```sql
@@ -122,11 +122,11 @@ MODIFY COLUMN type VARCHAR(10) NULL;
 - 테이블 만들 때 생성
 ```sql
 Create table new_mypokemon(
-number INT,
-name VARCHAR(20) UNIQUE,
-type VARCHAR(10) NOT NULL,
-attack INT DEFAULT 0
-);
+	number INT,
+	name VARCHAR(20) UNIQUE,
+	type VARCHAR(10) NOT NULL,
+	attack INT DEFAULT 0
+	);
 ```
 - 만들어진 테이블에 추가
 ```sql
