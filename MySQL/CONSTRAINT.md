@@ -5,7 +5,7 @@
 - 테이블 만들 때 PK 생성
 ```sql
 CREATE TABLE new_mypokemon(
-	number INT PRIMARY KEY,    
+	number INT AUTO_INCREMENT PRIMARY KEY,  # 자동적으로 증가하는 값 생성
 	name VARCHAR(20)
 	); 
 ```
