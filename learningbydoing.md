@@ -175,6 +175,7 @@ FROM (
     ) foo 
 GROUP BY 1
 ORDER BY 2 desc;
+```
 ```sql
 -- 11. 2020년 7월의 요일 및 시간대별 Revenue를 구해주세요
 SELECT week_at, hour_at, avg(revenue)
