@@ -137,6 +137,7 @@ FROM (
 	ORDER BY 1
     ) foo ;
 ```
+
 ```sql
 -- 9. 2020년 7월 요일별 Daily Revenue를 구해주세요. 어느 요일이 Revenue가 가장 높고 낮나요 ?
 # 각 날짜별 daily revenue 구함 -> 날짜의 요일로 그룹바이-평균 
@@ -150,8 +151,9 @@ FROM (
 	ORDER BY 1
     ) foo
 GROUP BY 1 
-ORDER BY 2 desc; 
+ORDER BY 2 desc;
 ```
+
 ```sql
 -- 10. 2020년 7월 시간대별 시간당 총 Revenue를 구해주세요. 어느 시간대가 Revenue가 가장 높고 낮나요 ? 
 -- 평균을 구하려면 총합하는 과정이 필요함
@@ -176,6 +178,7 @@ FROM (
 GROUP BY 1
 ORDER BY 2 desc;
 ```
+
 ```sql
 -- 11. 2020년 7월의 요일 및 시간대별 Revenue를 구해주세요
 SELECT week_at, hour_at, avg(revenue)
@@ -190,5 +193,137 @@ FROM (
 	) foo 
 GROUP BY 1, 2 ;
 ```
+
+- Day 15. 유저 세그먼트별 분석
+```sql
+-- 12. 전체 유저의 Demographic을 알고 싶어요. 성별 연령별로 유저 숫자를 알려주세요.
+-- 어느 세그먼트가 가장 숫자가 많나요 ? 참고로 기타 성별은 하나로, 연령은 5세 단위로 적당히 묶어주시고 유저 수가 높은 순서대로 정렬
+select case 
+	when length(gender) < 1 then 'Others'       # gender is null이 안 먹힐 때 length 함수로 돌파 
+    else gender end as '성별'
+    , case  
+	when age between 11 and 15 then '0_11-15'
+    when age between 16 and 20 then '1_16-20'
+    when age between 21 and 25 then '2_21-25'
+    when age between 26 and 30 then '3_26-30'
+    when age between 31 and 35 then '4_31-35'
+    when age between 36 and 40 then '5_36-40'
+    when age between 41 and 45 then '6_41-45'
+    when age between 46 and 50 then '7_46-50'
+    when age between 51 and 55 then '8_51-55'
+	else '9_56-' end as "연령대"
+    , count(*) as 유저수
+from tbl_customer
+group by 1, 2 
+order by 3 desc ; 
+```
+
+```sql
+-- 13. Q12 결과의 성,연령을 "남성(25~29세)"와 같이 통합해주시고, 각 성,연령이 전체 고객에서 얼마나 차지하는지 분포를 확인하기 
+select concat(case 
+	when length(gender) < 1 then '기타'
+	when gender = 'F' then '여성'
+	when gender = 'M' then '남성'
+    	when gender = 'Others' then '기타'
+	end
+    ,'('
+	, case  
+	when age between 11 and 15 then '11-15세'
+	when age between 16 and 20 then '16-20세'
+	when age between 21 and 25 then '21-25세'
+	when age between 26 and 30 then '26-30세'
+	when age between 31 and 35 then '31-35세'
+	when age between 36 and 40 then '36-40세'
+	when age between 41 and 45 then '41-45세'
+	when age between 46 and 50 then '46-50세'
+	when age between 51 and 55 then '51-55세'
+	else '56세 이상' end 
+    ,')') as 세그먼트
+	, round(count(*)/ (select count(*) from tbl_customer)*100,2) as 비율
+from tbl_customer
+group by 1 ; 
+```
+
+```
+-- 14. 2020년 7월, 성별에 따라 총 구매 건수와, 총 Revenue를 구해주세요. 이전처럼 남녀 이외의 성별은 하나로 묶기
+select case 
+	when length(C.gender) < 1 then '기타'
+	when C.gender = 'F' then '여성'
+    when C.gender = 'M' then '남성'
+    else '기타' end as '성별', count(P.id) as 구매건수, sum(price) as revenue
+from tbl_purchase P 
+left join tbl_customer C 
+on P.customer_id = C.customer_id
+where P.purchased_at >= '2020-07-01'
+	and P.purchased_at < '2020-08-01'
+group by 1 ;
+```
+
+```
+-- 15. 2020년 7월의 성별 연령대에 따라 구매 건수와, 총 Revenue를 구해주세요
+select concat(case 
+	when length(gender) < 1 then '기타'
+	when gender = 'F' then '여성'
+	when gender = 'M' then '남성'
+    when gender = 'Others' then '기타'
+	end
+    ,'('
+	, case  
+	when age between 11 and 15 then '11-15세'
+	when age between 16 and 20 then '16-20세'
+	when age between 21 and 25 then '21-25세'
+	when age between 26 and 30 then '26-30세'
+	when age between 31 and 35 then '31-35세'
+	when age between 36 and 40 then '36-40세'
+	when age between 41 and 45 then '41-45세'
+	when age between 46 and 50 then '46-50세'
+	when age between 51 and 55 then '51-55세'
+	else '56세 이상' end 
+    ,')') as 세그먼트
+    , count(P.id) as 구매건수
+    , sum(P.price) as revenue
+from tbl_purchase P
+left join tbl_customer C
+on P.customer_id = C.customer_id
+where P.purchased_at >= '2020-07-01'
+	and P.purchased_at < '2020-08-01'
+group by 1 ;
+```
+
+```sql
+-- 16. 2020년 7월 일별 매출의 전일 대비 증감폭, 증감률 구하기             # with, lag 
+with tbl_revenue as (
+select date_format(purchased_at, '%Y-%m-%d') as date_at
+	, sum(price) as revenue
+from tbl_purchase
+where purchased_at >= '2020-07-01'
+	and purchased_at < '2020-08-01'
+group by 1
+)
+
+select *, 
+	revenue - lag(revenue) over (order by date_at asc) as 증감폭,
+    round((revenue - lag(revenue) over (order by date_at asc)) / lag(revenue) over (order by date_at asc) * 100, 2) as 증감률
+from tbl_revenue ;
+```
+
+```sql
+-- 17. 7월에 일별로 구매 금액 기준으로 가장 많이 지출한 고객 Top3           # partition 
+select *             
+from (
+	select date_format(purchased_at, '%Y-%m-%d') as date_at, customer_id, sum(price),
+		dense_rank() over (partition by date_format(purchased_at, '%Y-%m-%d') order by sum(price) desc) as rnk
+	from tbl_purchase
+	where purchased_at >= '2020-07-01'
+		and purchased_at < '2020-08-01'     
+	group by 1, 2
+    ) foo
+where rnk <= 3; 
+```
+
+
+
+
+
 
 
