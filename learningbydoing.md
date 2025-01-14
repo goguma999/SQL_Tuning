@@ -9,7 +9,7 @@ where substring(purchased_at, 1,7) = '2020-07';   # 21060206300
 select sum(price)
 from tbl_purchase
 where purchased_at >= '2020-07-01'
-	and purchased_at < '2020-08-01' ;   # 21060206300
+  and purchased_at < '2020-08-01' ;   # 21060206300
 ```
 
 ```
@@ -71,7 +71,7 @@ where rnk between 1 and 3 ;
 select customer_id, sum(price) as revenue
 from tbl_purchase
 where purchased_at >= '2020-07-01'
-	and purchased_at < '2020-08-01'
+  and purchased_at < '2020-08-01'
 group by 1 
 order by 2 desc
 limit 5
@@ -85,7 +85,7 @@ offset 10;  # 앞에 10개를 건너뛰고 11번부터 보여줌
 SELECT *, date_format(visited_at, '%Y-%m-%d %T') as date_at
 from tbl_visit 
 WHERE visited_at >= '2020-07-01'
-	and visited_at < '2020-08-01' ;  
+  and visited_at < '2020-08-01' ;  
 # 확인해보니까 date_at 에 9시간 추가됨 
 # visited_at 컬럼의 값이 저장된 시간대와 쿼리를 실행하는 MySQL 서버나 클라이언트의 시간대 설정이 달라서. 
 
@@ -98,7 +98,7 @@ FROM (
 	SELECT date_format(visited_at, '%Y-%m-%d') as date_at, count(distinct customer_id) as DAU
 	from tbl_visit 
 	WHERE visited_at >= '2020-07-01'
-		and visited_at < '2020-08-01' 
+	  and visited_at < '2020-08-01' 
 	GROUP BY 1
 	ORDER BY 1 
     ) A ;
@@ -110,7 +110,7 @@ FROM (
 	SELECT date_format(visited_at, '%Y-%m-%U') as week, count(distinct customer_id) as users
 	FROM tbl_visit
 	WHERE visited_at >= '2020-07-05'     # 그냥 달력에서 보고 온전한 주 선택
-		and visited_at < '2020-07-26'
+	  and visited_at < '2020-07-26'
 	GROUP BY 1 
     ) foo ;
 ```
@@ -121,7 +121,7 @@ FROM (
 	SELECT date_format(purchased_at, '%Y-%m-%d') as date_at, sum(price) as sum_price
 	FROM tbl_purchase
 	WHERE purchased_at >= '2020-07-01' 
-		and purchased_at < '2020-08-01'
+	  and purchased_at < '2020-08-01'
 	GROUP BY 1
 	ORDER BY 1
     ) foo ;
@@ -132,7 +132,7 @@ FROM (
 	SELECT date_format(purchased_at, '%Y-%m-%U') as date_at, sum(price) as sum_price
 	FROM tbl_purchase
 	WHERE purchased_at >= '2020-07-05'
-		and purchased_at < '2020-07-26'
+	  and purchased_at < '2020-07-26'
 	GROUP BY 1
 	ORDER BY 1
     ) foo ;
@@ -146,7 +146,7 @@ FROM (
 	SELECT date_format(purchased_at, '%Y-%m-%d-%w') as date_at, sum(price) as revenue
 	FROM tbl_purchase
 	WHERE purchased_at >= '2020-07-01'
-		and purchased_at < '2020-08-01'
+	  and purchased_at < '2020-08-01'
 	GROUP BY 1 
 	ORDER BY 1
     ) foo
@@ -161,7 +161,7 @@ ORDER BY 2 desc;
 SELECT date_format(purchased_at, '%H') as date_time, avg(price) as revenue 
 FROM tbl_purchase
 WHERE purchased_at >= '2020-07-01'
-	and purchased_at < '2020-08-01'
+  and purchased_at < '2020-08-01'
 GROUP BY 1 ; 
 
 # 날짜별 시간대 매출 합계의 평균 
@@ -172,8 +172,8 @@ FROM (
 			sum(price) as revenue
 	FROM tbl_purchase
 	WHERE purchased_at >= '2020-07-01'
-		and purchased_at < '2020-08-01'
-	group by 1,2 
+	  and purchased_at < '2020-08-01'
+	GROUP BY 1,2 
     ) foo 
 GROUP BY 1
 ORDER BY 2 desc;
@@ -188,7 +188,7 @@ FROM (
 		sum(price) as revenue 
 	FROM tbl_purchase
 	WHERE purchased_at >= '2020-07-01'
-		and purchased_at < '2020-08-01' 
+	  and purchased_at < '2020-08-01' 
 	GROUP BY 1, 2 
 	) foo 
 GROUP BY 1, 2 ;
@@ -200,17 +200,17 @@ GROUP BY 1, 2 ;
 -- 어느 세그먼트가 가장 숫자가 많나요 ? 참고로 기타 성별은 하나로, 연령은 5세 단위로 적당히 묶어주시고 유저 수가 높은 순서대로 정렬
 select case 
 	when length(gender) < 1 then 'Others'       # gender is null이 안 먹힐 때 length 함수로 돌파 
-    else gender end as '성별'
-    , case  
+  	else gender end as '성별'
+    , case
 	when age between 11 and 15 then '0_11-15'
-    when age between 16 and 20 then '1_16-20'
-    when age between 21 and 25 then '2_21-25'
-    when age between 26 and 30 then '3_26-30'
-    when age between 31 and 35 then '4_31-35'
-    when age between 36 and 40 then '5_36-40'
-    when age between 41 and 45 then '6_41-45'
-    when age between 46 and 50 then '7_46-50'
-    when age between 51 and 55 then '8_51-55'
+	when age between 16 and 20 then '1_16-20'
+	when age between 21 and 25 then '2_21-25'
+	when age between 26 and 30 then '3_26-30'
+	when age between 31 and 35 then '4_31-35'
+	when age between 36 and 40 then '5_36-40'
+	when age between 41 and 45 then '6_41-45'
+	when age between 46 and 50 then '7_46-50'
+	when age between 51 and 55 then '8_51-55'
 	else '9_56-' end as "연령대"
     , count(*) as 유저수
 from tbl_customer
@@ -221,24 +221,24 @@ order by 3 desc ;
 ```sql
 -- 13. Q12 결과의 성,연령을 "남성(25~29세)"와 같이 통합해주시고, 각 성,연령이 전체 고객에서 얼마나 차지하는지 분포를 확인하기 
 select concat(case 
-	when length(gender) < 1 then '기타'
-	when gender = 'F' then '여성'
-	when gender = 'M' then '남성'
-    	when gender = 'Others' then '기타'
-	end
-    ,'('
+		when length(gender) < 1 then '기타'
+		when gender = 'F' then '여성'
+		when gender = 'M' then '남성'
+	    	when gender = 'Others' then '기타'
+		end
+        ,'('
 	, case  
-	when age between 11 and 15 then '11-15세'
-	when age between 16 and 20 then '16-20세'
-	when age between 21 and 25 then '21-25세'
-	when age between 26 and 30 then '26-30세'
-	when age between 31 and 35 then '31-35세'
-	when age between 36 and 40 then '36-40세'
-	when age between 41 and 45 then '41-45세'
-	when age between 46 and 50 then '46-50세'
-	when age between 51 and 55 then '51-55세'
-	else '56세 이상' end 
-    ,')') as 세그먼트
+		when age between 11 and 15 then '11-15세'
+		when age between 16 and 20 then '16-20세'
+		when age between 21 and 25 then '21-25세'
+		when age between 26 and 30 then '26-30세'
+		when age between 31 and 35 then '31-35세'
+		when age between 36 and 40 then '36-40세'
+		when age between 41 and 45 then '41-45세'
+		when age between 46 and 50 then '46-50세'
+		when age between 51 and 55 then '51-55세'
+		else '56세 이상' end 
+        ,')') as 세그먼트
 	, round(count(*)/ (select count(*) from tbl_customer)*100,2) as 비율
 from tbl_customer
 group by 1 ; 
@@ -249,13 +249,13 @@ group by 1 ;
 select case 
 	when length(C.gender) < 1 then '기타'
 	when C.gender = 'F' then '여성'
-    when C.gender = 'M' then '남성'
-    else '기타' end as '성별', count(P.id) as 구매건수, sum(price) as revenue
+	when C.gender = 'M' then '남성'
+	else '기타' end as '성별', count(P.id) as 구매건수, sum(price) as revenue
 from tbl_purchase P 
 left join tbl_customer C 
 on P.customer_id = C.customer_id
 where P.purchased_at >= '2020-07-01'
-	and P.purchased_at < '2020-08-01'
+  and P.purchased_at < '2020-08-01'
 group by 1 ;
 ```
 
@@ -265,9 +265,9 @@ select concat(case
 	when length(gender) < 1 then '기타'
 	when gender = 'F' then '여성'
 	when gender = 'M' then '남성'
-    when gender = 'Others' then '기타'
+	when gender = 'Others' then '기타'
 	end
-    ,'('
+        ,'('
 	, case  
 	when age between 11 and 15 then '11-15세'
 	when age between 16 and 20 then '16-20세'
@@ -279,14 +279,14 @@ select concat(case
 	when age between 46 and 50 then '46-50세'
 	when age between 51 and 55 then '51-55세'
 	else '56세 이상' end 
-    ,')') as 세그먼트
+    	,')') as 세그먼트
     , count(P.id) as 구매건수
     , sum(P.price) as revenue
 from tbl_purchase P
 left join tbl_customer C
 on P.customer_id = C.customer_id
 where P.purchased_at >= '2020-07-01'
-	and P.purchased_at < '2020-08-01'
+  and P.purchased_at < '2020-08-01'
 group by 1 ;
 ```
 
@@ -297,12 +297,12 @@ select date_format(purchased_at, '%Y-%m-%d') as date_at
 	, sum(price) as revenue
 from tbl_purchase
 where purchased_at >= '2020-07-01'
-	and purchased_at < '2020-08-01'
+  and purchased_at < '2020-08-01'
 group by 1
 )
 
 select *, 
-	revenue - lag(revenue) over (order by date_at asc) as 증감폭,
+    revenue - lag(revenue) over (order by date_at asc) as 증감폭,
     round((revenue - lag(revenue) over (order by date_at asc)) / lag(revenue) over (order by date_at asc) * 100, 2) as 증감률
 from tbl_revenue ;
 ```
@@ -315,12 +315,92 @@ from (
 		dense_rank() over (partition by date_format(purchased_at, '%Y-%m-%d') order by sum(price) desc) as rnk
 	from tbl_purchase
 	where purchased_at >= '2020-07-01'
-		and purchased_at < '2020-08-01'     
+	  and purchased_at < '2020-08-01'     
 	group by 1, 2
     ) foo
 where rnk <= 3; 
 ```
 
+- Day 16. 프로덕트 분석 심화
+```sql
+-- 18. 2020년 7월에 우리 신규유저가 하루 안에 결제로 넘어가는 비율이 어떻게 되나요 ? 
+-- 그 비율이 어떤지 알고 싶고, 결제까지 보통 몇 분 정도가 소요되는지 알고 싶어요      # timediff, interval
+with rt_tbl as (
+		select C.customer_id
+			, C.created_at
+			, P.customer_id as paying_user
+			, P.purchased_at
+			, time_to_sec(timediff(P.purchased_at, C.created_at))/3600 as diff_hour
+		from tbl_customer C
+		left join ( select customer_id, min(purchased_at) as purchased_at 
+			    from tbl_purchase
+			    group by 1 ) P 
+		on C.customer_id = P.customer_id 
+		and P.purchased_at < C.created_at + interval 1 day   # 계정 생성 후 하루 이내 구매한 사람
+		where C.created_at >= '2020-07-01'
+		  and C.created_at < '2020-08-01' 
+		)
+
+select round(count(paying_user)/count(customer_id)*100,2)
+from rt_tbl ;
+
+select avg(diff_hour)
+from rt_tbl;
+```
+
+```sql
+-- 19. 우리 서비스는 유저의 재방문율이 높은 서비스인가요? 이를 파악하기 위해 7월 기준 Day1 Retention이 어떤지 구하고 추세를 보기 위해 Daily로 추출해주세요.
+-- Retention: 시간이 지날수록 얼마나 많은 유저가 제품이나 서비스로 다시 돌아오는지
+-- N-day Retention: n=1,2,3,4...30..
+select date_format(A.visited_at - interval 9 hour, '%Y-%m-%d') as d_date
+	, count(distinct A.customer_id) as active_user
+    , count(distinct B.customer_id) as retained_user
+    , count(distinct B.customer_id) / count(distinct A.customer_id) as retention 
+from tbl_visit A
+left join tbl_visit B
+on A.customer_id = B.customer_id
+and date_format(A.visited_at - interval 9 hour, '%Y-%m-%d') = date_format(B.visited_at - interval 9 hour - interval 1 day, '%Y-%m-%d')
+where A.visited_at >= '2020-07-01'
+  and A.visited_at < '2020-08-01'
+group by 1 ;
+```
+
+```sql
+-- 20. 2020년 7월 우리 서비스는 신규유저가 많나요 ? 기존 유저가 많나요 ? 
+-- 가입기간별로 고객 분포가 어떤지 알려주세요. DAU 기준으로 부탁합니다.
+with tbl_visit_by_joined as ( 
+	select date_format(A.visited_at - interval 9 hour, '%Y-%m-%d') as d_date
+		, A.customer_id
+		, B.created_at as d_joined
+		, max(A.visited_at) as last_visit
+		, datediff(max(A.visited_at), B.created_at) as date_diff
+	from tbl_visit A
+	left join tbl_customer B
+	on A.customer_id = B.customer_id
+	where A.visited_at >= '2020-07-01'
+	  and A.visited_at < '2020-08-01'
+	group by 1,2,3
+)
+
+select A. d_date
+	, case when date_diff >= 730 then '2년 이상'
+	   when date_diff >= 365 then '1년 이상'
+           when date_diff >= 183 then '6개월 이상'
+           when date_diff >= 91 then '3개월 이상'
+           when date_diff >= 30 then '1개월 이상'
+           else '1개월 미만'
+           end as segment
+	, B.all_users
+	, count(A.customer_id) as users
+        , round(count(A.customer_id)/B.all_users*100,2) as ratio
+from tbl_visit_by_joined A
+left join (select d_date
+		, count(customer_id) all_users
+	    from tbl_visit_by_joined
+            group by 1 ) B 
+on A.d_date = B.d_date
+group by 1,2,3 
+order by 1, 2 ;
 
 
 
