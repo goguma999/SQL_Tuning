@@ -401,9 +401,43 @@ left join (select d_date
 on A.d_date = B.d_date
 group by 1,2,3 
 order by 1, 2 ;
+```
 
+## HackerRank
+- Basic
+```sql
+-- 21. Weather Observation Station 5 🍄
+-- Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically.
 
+-- 22. Weather Observation Station 6
+-- Query the list of CITY names starting with vowels (i.e., a, e, i, o, or u) from STATION. Your result cannot contain duplicates.
+select distinct(CITY)
+from STATION
+where substring(CITY,1,1) in ('a','e','i','o','u') ;
 
+-- 23. Weather Observation Station 7
+-- Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
+select distinct(CITY)
+from STATION
+where lower(CITY) like '%a'
+    or lower(CITY) like '%e'
+    or lower(CITY) like '%i'
+    or lower(CITY) like '%o'
+    or lower(CITY) like '%u' ;
+
+-- 24. Weather Observation Station 8
+-- Query the list of CITY names from STATION which have vowels (i.e., a, e, i, o, and u) as both their first and last characters. Your result cannot contain duplicates.
+select distinct(CITY)
+from STATION
+where lower(substring(CITY,1,1)) in ('a','e','i','o','u')
+  and lower(right(CITY,1)) in ('a','e','i','o','u') ;
+
+-- 25. Weather Observation Station 9
+-- Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates.
+select distinct(CITY)
+from STATION
+where lower(substring(CITY,1,1)) not in ('a','e','i','o','u') ;
+```
 
 
 
