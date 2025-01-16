@@ -426,14 +426,12 @@ where lower(CITY) like '%a'
     or lower(CITY) like '%u' ;
 
 -- 24. Weather Observation Station 8
--- Query the list of CITY names from STATION which have vowels (i.e., a, e, i, o, and u) as both their first and last characters. Your result cannot contain duplicates.
 select distinct(CITY)
 from STATION
 where lower(substring(CITY,1,1)) in ('a','e','i','o','u')
   and lower(right(CITY,1)) in ('a','e','i','o','u') ;
 
 -- 25. Weather Observation Station 9
--- Query the list of CITY names from STATION that do not start with vowels. Your result cannot contain duplicates.
 select distinct(CITY)
 from STATION
 where lower(substring(CITY,1,1)) not in ('a','e','i','o','u') ;
@@ -475,6 +473,27 @@ from CITY A
 left join COUNTRY B 
 on A.COUNTRYCODE = B.CODE
 where B.continent = 'Asia' ;
+
+-- 32. Weather Observation Station 15
+select round(long_w,4)
+from station 
+where lat_n < 137.2345
+order by lat_n desc 
+limit 1 ;
+
+-- 33. Type of Triangle
+Select case when A=B and B=C and C=A then 'Equilateral'    
+    when A+B <= C or A+C <= B or B+C <= A then 'Not A Triangle' 
+    when A<>B and A<>C and B<>C then 'Scalene'
+    else 'Isosceles' 
+    end 
+from TRIANGLES ;
+
+-- 34. Weather Observation Station 19
+select round(sqrt( power(max(lat_n)-min(lat_n),2) 
+            + power(max(long_w)-min(long_w),2) 
+           ),4)
+from station ;
 ```
 
 
