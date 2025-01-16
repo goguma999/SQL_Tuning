@@ -437,6 +437,44 @@ where lower(substring(CITY,1,1)) in ('a','e','i','o','u')
 select distinct(CITY)
 from STATION
 where lower(substring(CITY,1,1)) not in ('a','e','i','o','u') ;
+
+-- 26. Weather Observation Station 10
+select distinct(CITY) 
+from STATION
+where lower(right(CITY,1)) not in ('a','e','i','o','u') ;
+
+-- 27. Weather Observation Station 11
+select distinct(CITY)
+from STATION
+where lower(left(CITY,1)) not in ('a','e','i','o','u') 
+   or lower(right(CITY,1)) not in ('a','e','i','o','u') ;
+
+-- 28. Weather Observation Station 12
+select distinct(CITY)
+from STATION
+where lower(left(CITY,1)) not in ('a','e','i','o','u')
+  and lower(right(CITY,1)) not in ('a','e','i','o','u') ;
+
+-- 29. Higher Than 75 Marks
+select Name
+from STUDENTS
+where MARKS > 75    
+order by right(Name,3), ID ;
+
+-- 30. Average Population of Each Continent
+select B.CONTINENT, floor(avg(A.population))
+from CITY A 
+left join COUNTRY B
+on A.COUNTRYCODE = B.CODE
+where B.Continent is not null
+group by B.Continent ;
+
+-- 31. Population Census
+select sum(A.population)
+from CITY A
+left join COUNTRY B 
+on A.COUNTRYCODE = B.CODE
+where B.continent = 'Asia' ;
 ```
 
 
