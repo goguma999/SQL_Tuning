@@ -494,6 +494,32 @@ select round(sqrt( power(max(lat_n)-min(lat_n),2)
             + power(max(long_w)-min(long_w),2) 
            ),4)
 from station ;
+
+-- 34. Top Earners
+select salary*months, count(*) 
+from Employee
+group by salary*months
+order by 1 desc 
+limit 1 ;
+
+-- 35. Ollivander's Inventory 🍄
+Select A.id, B.age, A.coins_needed, A.power 
+from Wands A
+left join Wands_Property B 
+on A.code = B.code
+where B.is_evil = 0
+and A.coins_needed = (select min(C.coins_needed)
+                     from Wands C
+                     left join Wands_Property D 
+                     on C.code = D.code
+                     where D.is_evil = 0
+                     and C.power = A.power
+                     and D.age = B.age)
+order by A.power desc, B.age desc ;
+
+-- 36. 
+
+
 ```
 
 
