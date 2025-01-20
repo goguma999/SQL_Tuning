@@ -501,8 +501,11 @@ from Employee
 group by salary*months
 order by 1 desc 
 limit 1 ;
-
+```
+- Intermediate ~ Advanced 
+```
 -- 35. Ollivander's Inventory 🍄
+-- Power, Age 고려하면서 coins_needed를 최소화한 것 고르기 
 Select A.id, B.age, A.coins_needed, A.power 
 from Wands A
 left join Wands_Property B 
@@ -517,9 +520,29 @@ and A.coins_needed = (select min(C.coins_needed)
                      and D.age = B.age)
 order by A.power desc, B.age desc ;
 
--- 36. 
+-- 36. Contest Leaderboard
+-- Hackers들의 challenge_id 별 score 중 최고점들 합해서 정렬
+select hacker_id, name, sum(max_score)
+from(
+	select S.hacker_id as hacker_id, H.name as name, S.challenge_id as challenge_id, max(S.score) as max_score
+	from Submissions S
+	left join Hackers H
+	on S.hacker_id = H.hacker_id
+	group by 1,2,3
+	) foo
+group by 1,2
+having sum(max_score) != 0 
+order by 3 desc, 1 asc ;
 
-
+-- 37. Placements
+-- 3개 테이블 조인하기
+select S.name
+from Students S 
+left join Packages P1 on S.ID = P1.ID
+left join Friends F on S.ID = F.ID 
+left join Packages P2 on F.Friend_ID = P2.ID
+where P1.Salary < P2.Salary 
+order by P2.Salary ;
 ```
 
 
