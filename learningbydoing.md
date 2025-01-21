@@ -543,6 +543,44 @@ left join Friends F on S.ID = F.ID
 left join Packages P2 on F.Friend_ID = P2.ID
 where P1.Salary < P2.Salary 
 order by P2.Salary ;
+
+-- 38. The Report
+select Case when 
+    G.Grade < 8 then Null
+    else S.Name
+    end as Name
+    , G.Grade
+    , S.Marks
+from Students S 
+left join Grades G
+on S.Marks between G.Min_Mark and G.Max_Mark
+order by 2 desc, 1 asc ;
+
+-- 39. Weather Observation Station 5 🍄
+-- 이름이 가장 짧은 도시, 가장 긴 도시 한 개씩만 출력하기 알파벳 순으로
+select CITY, length(CITY)
+from (
+select CITY, length(CITY), rank() over (partition by length(CITY) order by CITY asc) as ord
+from STATION
+where length(CITY) = (select min(length(CITY))
+                     from STATION) 
+    or length(CITY) = (select max(length(CITY))
+                      from STATION)
+    ) foo
+where ord = 1 ;
+
+(select CITY, length(CITY)   
+from STATION
+where length(CITY) = (select max(length(CITY))
+                     from STATION)
+order by 1 limit 1)
+union
+(select CITY, length(CITY)
+from STATION
+where length(CITY) = (select min(length(CITY))
+                     from STATION)
+order by 1 limit 1) ;
+# 괄호로 묶어서 UNION 
 ```
 
 
