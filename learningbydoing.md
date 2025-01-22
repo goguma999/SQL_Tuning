@@ -580,7 +580,25 @@ from STATION
 where length(CITY) = (select min(length(CITY))
                      from STATION)
 order by 1 limit 1) ;
-# 괄호로 묶어서 UNION 
+# 괄호로 묶어서 UNION
+
+-- 39. The PADS
+select concat(name,"(",left(Occupation,1),")")
+from Occupations
+order by Name asc ; 
+select concat("There are a total of ", occupation_cnt, " ",lower(occupation),"s.") 
+from (select count(*) as occupation_cnt, occupation
+      from OCCUPATIONS
+      group by 2 
+      order by occupation_cnt, occupation) foo ;
+
+-- 40. Occupations 🍄
+-- pivot. 직업별 컬럼 만들고 이름 정렬
+```
+## 프로그래머스 
+```
+-- 41. 자동차 대여 기록에서 장기/단기 대여 구분하기
+-- 42. 특정 형질을 가지는 대장균 찾기
 ```
 
 
