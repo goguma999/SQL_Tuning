@@ -1,7 +1,7 @@
 ## [패스트캠퍼스] K-Digital Credit SQL로 시작하는 데이터 분석 첫걸음
 - Day 13. 서비스 이해 기본
+1. 2020년 7월의 총 Revenue
 ```
--- 1. 2020년 7월의 총 Revenue
 select sum(price)
 from tbl_purchase
 where substring(purchased_at, 1,7) = '2020-07';   # 21060206300
@@ -12,17 +12,17 @@ where purchased_at >= '2020-07-01'
   and purchased_at < '2020-08-01' ;   # 21060206300
 ```
 
+2. 2020년 7월의 총 MAU
+- Monthly Active Users: 30일동안 앱을 사용하는 순수 유저 수 
 ```
--- 2. 2020년 7월의 총 MAU 
--- Monthly Active Users: 30일동안 앱을 사용하는 순수 유저 수 
 select count(distinct customer_id) 
 from tbl_visit 
 where substring(visited_at,1,7) = '2020-07';  # 16414
 ```
 
+3. 7월에 우리 Active 유저의 구매율(Paying Rate)은 ? 
+- 7월 구매 유저 수 / 전체 활성 유저
 ```
--- 3. 7월에 우리 Active 유저의 구매율(Paying Rate)은 ? 
--- 7월 구매 유저 수 / 전체 활성 유저
 select count(distinct customer_id) from tbl_purchase 
 where substring(purchased_at,1,7) = '2020-07';   # 11174
 
@@ -32,9 +32,9 @@ where substring(visited_at,1,7) = '2020-07';   # 16414
 select round(11174/16414*100,2);   # 68.08    # 그냥 숫자 긁어서 나누기 함 
 ```
 
+4. 7월에 구매 유저의 월 평균 구매금액은 ? 
+- ARPPU = Average Revenue per Paying User
 ```sql 
--- 4. 7월에 구매 유저의 월 평균 구매금액은 ? 
--- ARPPU = Average Revenue per Paying User
 # 1.유져별 7월에 한 번 구매할 때 평균 금액 
 select customer_id, avg(price)
 from tbl_purchase
@@ -55,8 +55,8 @@ from ( select customer_id, sum(price) as revenue
 	group by customer_id ) A ;   # 1884750.8770
 ```
 
+5. 7월에 가장 많이 구매한 고객 Top3와 Top10~15 고객 ?
 ```sql
--- 5. 7월에 가장 많이 구매한 고객 Top3와 Top10~15 고객 ?
 # rank+서브쿼리 사용
 select customer_id, sum_price, rnk
 from (
@@ -67,7 +67,7 @@ from (
     ) A
 where rnk between 1 and 3 ;
 
-# offset 사용
+# offset 사용 🍄
 select customer_id, sum(price) as revenue
 from tbl_purchase
 where purchased_at >= '2020-07-01'
@@ -79,8 +79,8 @@ offset 10;  # 앞에 10개를 건너뛰고 11번부터 보여줌
 ```
 
 - Day 14. 날짜·시간별 분석
+6. 2020년 7월의 평균 DAU를 구해주세요. Active User 수가 증가하는 추세인가요 ? 
 ```sql
--- 6. 2020년 7월의 평균 DAU를 구해주세요. Active User 수가 증가하는 추세인가요 ? 
 # date_format 변경 확인
 SELECT *, date_format(visited_at, '%Y-%m-%d %T') as date_at
 from tbl_visit 
@@ -103,8 +103,9 @@ FROM (
 	ORDER BY 1 
     ) A ;
 ```
+
+7. 2020년 7월의 평균 WAU
 ```
--- 7. 2020년 7월의 평균 WAU를 구해주세요
 SELECT avg(users) as 평균WAU
 FROM (
 	SELECT date_format(visited_at, '%Y-%m-%U') as week, count(distinct customer_id) as users
@@ -114,8 +115,9 @@ FROM (
 	GROUP BY 1 
     ) foo ;
 ```
+
+8-1. 2020년 7월의 Daily Revenue는 증가하는 추세인가요 ? 평균 Daily Revenue도 구해주세요
 ```
--- 8-1. 2020년 7월의 Daily Revenue는 증가하는 추세인가요 ? 평균 Daily Revenue도 구해주세요
 SELECT avg(sum_price) as avg_DR
 FROM (
 	SELECT date_format(purchased_at, '%Y-%m-%d') as date_at, sum(price) as sum_price
@@ -125,8 +127,10 @@ FROM (
 	GROUP BY 1
 	ORDER BY 1
     ) foo ;
+```
 
--- 8-2. 2020년 7월의 평균 Weekly Revenue를 구해주세요
+8-2. 2020년 7월의 평균 Weekly Revenue
+```
 SELECT avg(sum_price) as avg_WR
 FROM (
 	SELECT date_format(purchased_at, '%Y-%m-%U') as date_at, sum(price) as sum_price
@@ -138,8 +142,8 @@ FROM (
     ) foo ;
 ```
 
+9. 2020년 7월 요일별 Daily Revenue를 구해주세요. 어느 요일이 Revenue가 가장 높고 낮나요 ?
 ```sql
--- 9. 2020년 7월 요일별 Daily Revenue를 구해주세요. 어느 요일이 Revenue가 가장 높고 낮나요 ?
 # 각 날짜별 daily revenue 구함 -> 날짜의 요일로 그룹바이-평균 
 SELECT date_format(date_at, '%a') as day_name, avg(revenue)
 FROM ( 
@@ -154,9 +158,9 @@ GROUP BY 1
 ORDER BY 2 desc;
 ```
 
+10. 2020년 7월 시간대별 시간당 총 Revenue를 구해주세요. 어느 시간대가 Revenue가 가장 높고 낮나요 ? 
 ```sql
--- 10. 2020년 7월 시간대별 시간당 총 Revenue를 구해주세요. 어느 시간대가 Revenue가 가장 높고 낮나요 ? 
--- 평균을 구하려면 총합하는 과정이 필요함
+# 평균을 구하려면 총합하는 과정이 필요함
 # 시간대별로 개별 거래의 price의 평균
 SELECT date_format(purchased_at, '%H') as date_time, avg(price) as revenue 
 FROM tbl_purchase
@@ -167,7 +171,7 @@ GROUP BY 1 ;
 # 날짜별 시간대 매출 합계의 평균 
 SELECT hour_at, avg(revenue)   
 FROM (
-	SELECT date_format(purchased_at, '%Y-%m-%d') as date_at,  # 날짜별 합계
+	SELECT date_format(purchased_at, '%Y-%m-%d') as date_at,   # 날짜별 합계
 			date_format(purchased_at, '%H') as hour_at,  # 시간대별 합계도 뽑아야 하니까 시간 컬럼
 			sum(price) as revenue
 	FROM tbl_purchase
@@ -179,8 +183,8 @@ GROUP BY 1
 ORDER BY 2 desc;
 ```
 
+11. 2020년 7월의 요일 및 시간대별 Revenue
 ```sql
--- 11. 2020년 7월의 요일 및 시간대별 Revenue를 구해주세요
 SELECT week_at, hour_at, avg(revenue)
 FROM (
 	SELECT date_format(purchased_at, '%a') as week_at,
@@ -195,9 +199,9 @@ GROUP BY 1, 2 ;
 ```
 
 - Day 15. 유저 세그먼트별 분석
+12. 전체 유저의 Demographic을 알고 싶어요. 성별 연령별로 유저 숫자를 알려주세요.
+어느 세그먼트가 가장 숫자가 많나요 ? 참고로 기타 성별은 하나로, 연령은 5세 단위로 적당히 묶어주시고 유저 수가 높은 순서대로 정렬
 ```sql
--- 12. 전체 유저의 Demographic을 알고 싶어요. 성별 연령별로 유저 숫자를 알려주세요.
--- 어느 세그먼트가 가장 숫자가 많나요 ? 참고로 기타 성별은 하나로, 연령은 5세 단위로 적당히 묶어주시고 유저 수가 높은 순서대로 정렬
 select case 
 	when length(gender) < 1 then 'Others'       # gender is null이 안 먹힐 때 length 함수로 돌파 
   	else gender end as '성별'
@@ -218,8 +222,8 @@ group by 1, 2
 order by 3 desc ; 
 ```
 
+13. Q12 결과의 성,연령을 "남성(25~29세)"와 같이 통합해주시고, 각 성,연령이 전체 고객에서 얼마나 차지하는지 분포를 확인하기 
 ```sql
--- 13. Q12 결과의 성,연령을 "남성(25~29세)"와 같이 통합해주시고, 각 성,연령이 전체 고객에서 얼마나 차지하는지 분포를 확인하기 
 select concat(case 
 		when length(gender) < 1 then '기타'
 		when gender = 'F' then '여성'
@@ -244,8 +248,8 @@ from tbl_customer
 group by 1 ; 
 ```
 
+14. 2020년 7월, 성별에 따라 총 구매 건수와, 총 Revenue를 구해주세요. 이전처럼 남녀 이외의 성별은 하나로 묶기
 ```
--- 14. 2020년 7월, 성별에 따라 총 구매 건수와, 총 Revenue를 구해주세요. 이전처럼 남녀 이외의 성별은 하나로 묶기
 select case 
 	when length(C.gender) < 1 then '기타'
 	when C.gender = 'F' then '여성'
@@ -259,8 +263,8 @@ where P.purchased_at >= '2020-07-01'
 group by 1 ;
 ```
 
+15. 2020년 7월의 성별 연령대에 따라 구매 건수와, 총 Revenue를 구해주세요
 ```
--- 15. 2020년 7월의 성별 연령대에 따라 구매 건수와, 총 Revenue를 구해주세요
 select concat(case 
 	when length(gender) < 1 then '기타'
 	when gender = 'F' then '여성'
@@ -290,8 +294,8 @@ where P.purchased_at >= '2020-07-01'
 group by 1 ;
 ```
 
+16. 2020년 7월 일별 매출의 전일 대비 증감폭, 증감률 구하기             # with, lag 
 ```sql
--- 16. 2020년 7월 일별 매출의 전일 대비 증감폭, 증감률 구하기             # with, lag 
 with tbl_revenue as (
 select date_format(purchased_at, '%Y-%m-%d') as date_at
 	, sum(price) as revenue
@@ -307,8 +311,8 @@ select *,
 from tbl_revenue ;
 ```
 
+17. 7월에 일별로 구매 금액 기준으로 가장 많이 지출한 고객 Top3           # partition 
 ```sql
--- 17. 7월에 일별로 구매 금액 기준으로 가장 많이 지출한 고객 Top3           # partition 
 select *             
 from (
 	select date_format(purchased_at, '%Y-%m-%d') as date_at, customer_id, sum(price),
@@ -322,9 +326,9 @@ where rnk <= 3;
 ```
 
 - Day 16. 프로덕트 분석 심화
+18. 2020년 7월에 우리 신규유저가 하루 안에 결제로 넘어가는 비율이 어떻게 되나요 ? <br>
+그 비율이 어떤지 알고 싶고, 결제까지 보통 몇 분 정도가 소요되는지 알고 싶어요      # timediff, interval
 ```sql
--- 18. 2020년 7월에 우리 신규유저가 하루 안에 결제로 넘어가는 비율이 어떻게 되나요 ? 
--- 그 비율이 어떤지 알고 싶고, 결제까지 보통 몇 분 정도가 소요되는지 알고 싶어요      # timediff, interval
 with rt_tbl as (
 		select C.customer_id
 			, C.created_at
@@ -348,10 +352,11 @@ select avg(diff_hour)
 from rt_tbl;
 ```
 
+
+19. 우리 서비스는 유저의 재방문율이 높은 서비스인가요? 이를 파악하기 위해 7월 기준 Day1 Retention이 어떤지 구하고 추세를 보기 위해 Daily로 추출해주세요.
+- Retention: 시간이 지날수록 얼마나 많은 유저가 제품이나 서비스로 다시 돌아오는지
+- N-day Retention: n=1,2,3,4...30..
 ```sql
--- 19. 우리 서비스는 유저의 재방문율이 높은 서비스인가요? 이를 파악하기 위해 7월 기준 Day1 Retention이 어떤지 구하고 추세를 보기 위해 Daily로 추출해주세요.
--- Retention: 시간이 지날수록 얼마나 많은 유저가 제품이나 서비스로 다시 돌아오는지
--- N-day Retention: n=1,2,3,4...30..
 select date_format(A.visited_at - interval 9 hour, '%Y-%m-%d') as d_date
 	, count(distinct A.customer_id) as active_user
     , count(distinct B.customer_id) as retained_user
@@ -365,9 +370,9 @@ where A.visited_at >= '2020-07-01'
 group by 1 ;
 ```
 
+20. 2020년 7월 우리 서비스는 신규유저가 많나요 ? 기존 유저가 많나요 ? <br>
+가입기간별로 고객 분포가 어떤지 알려주세요. DAU 기준으로 부탁합니다.
 ```sql
--- 20. 2020년 7월 우리 서비스는 신규유저가 많나요 ? 기존 유저가 많나요 ? 
--- 가입기간별로 고객 분포가 어떤지 알려주세요. DAU 기준으로 부탁합니다.
 with tbl_visit_by_joined as ( 
 	select date_format(A.visited_at - interval 9 hour, '%Y-%m-%d') as d_date
 		, A.customer_id
@@ -402,204 +407,3 @@ on A.d_date = B.d_date
 group by 1,2,3 
 order by 1, 2 ;
 ```
-
-## HackerRank
-- Basic
-```
--- 21. Weather Observation Station 5 🍄
--- Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically.
-
--- 22. Weather Observation Station 6
--- Query the list of CITY names starting with vowels (i.e., a, e, i, o, or u) from STATION. Your result cannot contain duplicates.
-select distinct(CITY)
-from STATION
-where substring(CITY,1,1) in ('a','e','i','o','u') ;
-
--- 23. Weather Observation Station 7
--- Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
-select distinct(CITY)
-from STATION
-where lower(CITY) like '%a'
-    or lower(CITY) like '%e'
-    or lower(CITY) like '%i'
-    or lower(CITY) like '%o'
-    or lower(CITY) like '%u' ;
-
--- 24. Weather Observation Station 8
-select distinct(CITY)
-from STATION
-where lower(substring(CITY,1,1)) in ('a','e','i','o','u')
-  and lower(right(CITY,1)) in ('a','e','i','o','u') ;
-
--- 25. Weather Observation Station 9
-select distinct(CITY)
-from STATION
-where lower(substring(CITY,1,1)) not in ('a','e','i','o','u') ;
-
--- 26. Weather Observation Station 10
-select distinct(CITY) 
-from STATION
-where lower(right(CITY,1)) not in ('a','e','i','o','u') ;
-
--- 27. Weather Observation Station 11
-select distinct(CITY)
-from STATION
-where lower(left(CITY,1)) not in ('a','e','i','o','u') 
-   or lower(right(CITY,1)) not in ('a','e','i','o','u') ;
-
--- 28. Weather Observation Station 12
-select distinct(CITY)
-from STATION
-where lower(left(CITY,1)) not in ('a','e','i','o','u')
-  and lower(right(CITY,1)) not in ('a','e','i','o','u') ;
-
--- 29. Higher Than 75 Marks
-select Name
-from STUDENTS
-where MARKS > 75    
-order by right(Name,3), ID ;
-
--- 30. Average Population of Each Continent
-select B.CONTINENT, floor(avg(A.population))
-from CITY A 
-left join COUNTRY B
-on A.COUNTRYCODE = B.CODE
-where B.Continent is not null
-group by B.Continent ;
-
--- 31. Population Census
-select sum(A.population)
-from CITY A
-left join COUNTRY B 
-on A.COUNTRYCODE = B.CODE
-where B.continent = 'Asia' ;
-
--- 32. Weather Observation Station 15
-select round(long_w,4)
-from station 
-where lat_n < 137.2345
-order by lat_n desc 
-limit 1 ;
-
--- 33. Type of Triangle
-Select case when A=B and B=C and C=A then 'Equilateral'    
-    when A+B <= C or A+C <= B or B+C <= A then 'Not A Triangle' 
-    when A<>B and A<>C and B<>C then 'Scalene'
-    else 'Isosceles' 
-    end 
-from TRIANGLES ;
-
--- 34. Weather Observation Station 19
-select round(sqrt( power(max(lat_n)-min(lat_n),2) 
-            + power(max(long_w)-min(long_w),2) 
-           ),4)
-from station ;
-
--- 34. Top Earners
-select salary*months, count(*) 
-from Employee
-group by salary*months
-order by 1 desc 
-limit 1 ;
-```
-- Intermediate ~ Advanced 
-```
--- 35. Ollivander's Inventory 🍄
--- Power, Age 고려하면서 coins_needed를 최소화한 것 고르기 
-Select A.id, B.age, A.coins_needed, A.power 
-from Wands A
-left join Wands_Property B 
-on A.code = B.code
-where B.is_evil = 0
-and A.coins_needed = (select min(C.coins_needed)
-                     from Wands C
-                     left join Wands_Property D 
-                     on C.code = D.code
-                     where D.is_evil = 0
-                     and C.power = A.power
-                     and D.age = B.age)
-order by A.power desc, B.age desc ;
-
--- 36. Contest Leaderboard
--- Hackers들의 challenge_id 별 score 중 최고점들 합해서 정렬
-select hacker_id, name, sum(max_score)
-from(
-	select S.hacker_id as hacker_id, H.name as name, S.challenge_id as challenge_id, max(S.score) as max_score
-	from Submissions S
-	left join Hackers H
-	on S.hacker_id = H.hacker_id
-	group by 1,2,3
-	) foo
-group by 1,2
-having sum(max_score) != 0 
-order by 3 desc, 1 asc ;
-
--- 37. Placements
--- 3개 테이블 조인하기
-select S.name
-from Students S 
-left join Packages P1 on S.ID = P1.ID
-left join Friends F on S.ID = F.ID 
-left join Packages P2 on F.Friend_ID = P2.ID
-where P1.Salary < P2.Salary 
-order by P2.Salary ;
-
--- 38. The Report
-select Case when 
-    G.Grade < 8 then Null
-    else S.Name
-    end as Name
-    , G.Grade
-    , S.Marks
-from Students S 
-left join Grades G
-on S.Marks between G.Min_Mark and G.Max_Mark
-order by 2 desc, 1 asc ;
-
--- 39. Weather Observation Station 5 🍄
--- 이름이 가장 짧은 도시, 가장 긴 도시 한 개씩만 출력하기 알파벳 순으로
-select CITY, length(CITY)
-from (
-select CITY, length(CITY), rank() over (partition by length(CITY) order by CITY asc) as ord
-from STATION
-where length(CITY) = (select min(length(CITY))
-                     from STATION) 
-    or length(CITY) = (select max(length(CITY))
-                      from STATION)
-    ) foo
-where ord = 1 ;
-
-(select CITY, length(CITY)   
-from STATION
-where length(CITY) = (select max(length(CITY))
-                     from STATION)
-order by 1 limit 1)
-union
-(select CITY, length(CITY)
-from STATION
-where length(CITY) = (select min(length(CITY))
-                     from STATION)
-order by 1 limit 1) ;
-# 괄호로 묶어서 UNION
-
--- 39. The PADS
-select concat(name,"(",left(Occupation,1),")")
-from Occupations
-order by Name asc ; 
-select concat("There are a total of ", occupation_cnt, " ",lower(occupation),"s.") 
-from (select count(*) as occupation_cnt, occupation
-      from OCCUPATIONS
-      group by 2 
-      order by occupation_cnt, occupation) foo ;
-
--- 40. Occupations 🍄
--- pivot. 직업별 컬럼 만들고 이름 정렬
-```
-## 프로그래머스 
-```
--- 41. 자동차 대여 기록에서 장기/단기 대여 구분하기
--- 42. 특정 형질을 가지는 대장균 찾기
-```
-
-
-
