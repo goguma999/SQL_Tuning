@@ -1,12 +1,12 @@
 ## HackerRank
 ### Basic
-21. Weather Observation Station 5 🍄
+1. Weather Observation Station 5 🍄
 Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). <br>
 If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically.
 ```
 ```
 
-22. Weather Observation Station 6
+2. Weather Observation Station 6
 Query the list of CITY names starting with vowels (i.e., a, e, i, o, or u) from STATION. Your result cannot contain duplicates. <br>
 ```
 select distinct(CITY)
@@ -14,7 +14,7 @@ from STATION
 where substring(CITY,1,1) in ('a','e','i','o','u') ;
 ```
 
-23. Weather Observation Station 7
+3. Weather Observation Station 7
 Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. Your result cannot contain duplicates.
 ```
 select distinct(CITY)
@@ -26,7 +26,7 @@ where lower(CITY) like '%a'
     or lower(CITY) like '%u' ;
 ```
 
-24. Weather Observation Station 8
+4. Weather Observation Station 8
 ```
 select distinct(CITY)
 from STATION
@@ -34,21 +34,21 @@ where lower(substring(CITY,1,1)) in ('a','e','i','o','u')
   and lower(right(CITY,1)) in ('a','e','i','o','u') ;
 ```
 
-25. Weather Observation Station 9
+5. Weather Observation Station 9
 ```
 select distinct(CITY)
 from STATION
 where lower(substring(CITY,1,1)) not in ('a','e','i','o','u') ;
 ```
 
-26. Weather Observation Station 10
+6. Weather Observation Station 10
 ```
 select distinct(CITY) 
 from STATION
 where lower(right(CITY,1)) not in ('a','e','i','o','u') ;
 ```
 
-27. Weather Observation Station 11
+7. Weather Observation Station 11
 ```
 select distinct(CITY)
 from STATION
@@ -56,7 +56,7 @@ where lower(left(CITY,1)) not in ('a','e','i','o','u')
    or lower(right(CITY,1)) not in ('a','e','i','o','u') ;
 ```
 
-28. Weather Observation Station 12
+8. Weather Observation Station 12
 ```
 select distinct(CITY)
 from STATION
@@ -64,7 +64,7 @@ where lower(left(CITY,1)) not in ('a','e','i','o','u')
   and lower(right(CITY,1)) not in ('a','e','i','o','u') ;
 ```
 
-29. Higher Than 75 Marks
+9. Higher Than 75 Marks
 ```
 select Name
 from STUDENTS
@@ -72,7 +72,7 @@ where MARKS > 75
 order by right(Name,3), ID ;
 ```
 
-30. Average Population of Each Continent
+10. Average Population of Each Continent
 ```
 select B.CONTINENT, floor(avg(A.population))
 from CITY A 
@@ -82,7 +82,7 @@ where B.Continent is not null
 group by B.Continent ;
 ```
 
-31. Population Census
+11. Population Census
 ```
 select sum(A.population)
 from CITY A
@@ -91,7 +91,7 @@ on A.COUNTRYCODE = B.CODE
 where B.continent = 'Asia' ;
 ```
 
-32. Weather Observation Station 15
+12. Weather Observation Station 15
 ```
 select round(long_w,4)
 from station 
@@ -100,7 +100,7 @@ order by lat_n desc
 limit 1 ;
 ```
 
-33. Type of Triangle
+13. Type of Triangle
 ```
 Select case when A=B and B=C and C=A then 'Equilateral'    
     when A+B <= C or A+C <= B or B+C <= A then 'Not A Triangle' 
@@ -110,7 +110,7 @@ Select case when A=B and B=C and C=A then 'Equilateral'
 from TRIANGLES ;
 ```
 
-34. Weather Observation Station 19
+14. Weather Observation Station 19
 ```
 select round(sqrt( power(max(lat_n)-min(lat_n),2) 
             + power(max(long_w)-min(long_w),2) 
@@ -118,7 +118,7 @@ select round(sqrt( power(max(lat_n)-min(lat_n),2)
 from station ;
 ```
 
-35. Top Earners
+15. Top Earners
 ```
 select salary*months, count(*) 
 from Employee
@@ -128,7 +128,7 @@ limit 1 ;
 ```
 
 ### Intermediate ~ Advanced 
-36. Ollivander's Inventory 🍄 <br>
+16. Ollivander's Inventory 🍄 <br>
 -- Power, Age 고려하면서 coins_needed를 최소화한 것 고르기 
 ```
 Select A.id, B.age, A.coins_needed, A.power 
@@ -146,7 +146,7 @@ and A.coins_needed = (select min(C.coins_needed)
 order by A.power desc, B.age desc ;
 ```
 
-37. Contest Leaderboard
+17. Contest Leaderboard
 -- Hackers들의 challenge_id 별 score 중 최고점들 합해서 정렬
 ```
 select hacker_id, name, sum(max_score)
@@ -162,7 +162,7 @@ having sum(max_score) != 0
 order by 3 desc, 1 asc ;
 ```
 
-38. Placements
+18. Placements
 -- 3개 테이블 조인하기
 ```
 select S.name
@@ -174,7 +174,7 @@ where P1.Salary < P2.Salary
 order by P2.Salary ;
 ```
 
-39. The Report
+19. The Report
 ```
 select Case when 
     G.Grade < 8 then Null
@@ -188,7 +188,7 @@ on S.Marks between G.Min_Mark and G.Max_Mark
 order by 2 desc, 1 asc ;
 ```
 
-40. Weather Observation Station 5 🍄
+20. Weather Observation Station 5 🍄
 -- 이름이 가장 짧은 도시, 가장 긴 도시 한 개씩만 출력하기 알파벳 순으로
 ```
 select CITY, length(CITY)
@@ -216,7 +216,7 @@ order by 1 limit 1) ;
 # 괄호로 묶어서 UNION
 ```
 
-41. The PADS
+21. The PADS
 ```
 select concat(name,"(",left(Occupation,1),")")
 from Occupations
@@ -228,7 +228,7 @@ from (select count(*) as occupation_cnt, occupation
       order by occupation_cnt, occupation) foo ;
 ```
 
-42. Occupations 🍄
+22. Occupations 🍄
 -- pivot. 직업별 컬럼 만들고 이름 정렬
 ```
 ```
