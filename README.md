@@ -1,13 +1,12 @@
-## SQL  
-🔗[MySQL 노트 바로가기](MySQL) <br>
-🔗[Oracle 노트 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4) <br>
+## SQL 
+📌[MySQL 노트 바로가기](MySQL) <br>
+📌[Oracle 노트 바로가기](https://changeable-yacht-8d2.notion.site/04df6f08611d4deeb4ef1bc8152867a4?v=940a168a07e34cb7b2218cf4c058bc20&pvs=4) <br>
 교재: 초보자를 위한 SQL 200제 (PL/SQL)<br> 
 
 &nbsp;
 
 ## Codingtest
-🔗[바로가기](codingtest) <br>
-Fastcampus 강의, HackerRank, Programmers 에서 제공하는 SQL 문제 풀이 기록입니다. 
+Fastcampus 강의, HackerRank, Programmers 에서 제공하는 SQL 문제 풀이 기록입니다. 🔗[바로가기](codingtest) 
 
 &nbsp; 
 
