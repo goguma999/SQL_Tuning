@@ -46,7 +46,6 @@ select truncate(12345.67891,-1) = 12340
 select truncate(12345.67891,-2) = 12300
 ```
 
-
 4. 상품 별 오프라인 매출 구하기
 ```
 select P.PRODUCT_CODE, sum(P.PRICE*S.SALES_AMOUNT) as SALES
@@ -110,6 +109,38 @@ right join (
             limit 1 
             ) G
 on E.EMP_NO = G.EMP_NO ;
+```
+
+10. 특정 물고기를 잡은 총 수 구하기
+```
+select count(*) as FISH_COUNT
+from FISH_INFO I
+left join FISH_NAME_INFO N
+on I.FISH_TYPE = N.FISH_TYPE
+where N.FISH_NAME in ('BASS','SNAPPER') ; 
+```
+
+11. 조건에 부합하는 중고거래 상태 조회하기
+```
+select BOARD_ID, WRITER_ID, TITLE, PRICE, 
+    case STATUS
+    when 'DONE' then '거래완료'
+    when 'SALE' then '판매중'
+    when 'RESERVED' then '예약중'
+    end as STATUS
+from USED_GOODS_BOARD
+where date_format(CREATED_DATE,'%Y-%m-%d') = '2022-10-05'
+order by 1 desc ; 
+```
+
+12. 노선별 평균 역 사이 거리 조회하기
+```
+select ROUTE
+    , concat(round(sum(D_BETWEEN_DIST),1),'km') as TOTAL_DISTANCE
+    , concat(round(avg(D_BETWEEN_DIST),2),'km') as AVERAGE_DISTANCE
+from SUBWAY_DISTANCE 
+group by 1
+order by 1 desc ;
 ```
 
 
