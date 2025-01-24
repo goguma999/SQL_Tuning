@@ -8,7 +8,7 @@
 ```
 ```
 
-3. 가격대 별 상품 개수 구하기 🍄 <br> 
+3. 가격대 별 상품 개수 구하기 🍄  
 ```
 select case 
     when price >= 0 and price < 10000 then 0
@@ -32,8 +32,22 @@ select 10000 * (PRICE DIV 10000) AS PRICE_GROUP, count(1) as PRODUCTS
 from product 
 group by 1 
 order by 1 ;
+```
+```sql
+select truncate(PRICE, -4) as PRICE_GROUP
+       , count(*) as PRODUCTS
+from PRODUCT
+group by 1
+order by 1 ;
 
-4. 상품 별 오프라인 매출 구하기<br>
+select truncate(12345.67891,1) = 12345.6
+select truncate(12345.67891,4) = 12345.6789
+select truncate(12345.67891,-1) = 12340
+select truncate(12345.67891,-2) = 12300
+```
+
+
+4. 상품 별 오프라인 매출 구하기
 ```
 select P.PRODUCT_CODE, sum(P.PRICE*S.SALES_AMOUNT) as SALES
 from OFFLINE_SALE S 
@@ -61,4 +75,41 @@ on F.FLAVOR = I.FLAVOR
 group by 1 
 order by 2 asc ;
 ```
+
+7. 조건에 맞는 도서와 저자 리스트 출력하기
+```
+select B.BOOK_ID, A.AUTHOR_NAME,
+        date_format(B.PUBLISHED_DATE,'%Y-%m-%d') as PURBLISHED_DATE
+from BOOK B
+left join AUTHOR A
+on B.AUTHOR_ID = A.AUTHOR_ID
+where B.CATEGORY = '경제'
+order by 3 asc ; 
+```
+
+8. 자동차 평균 대여 기간 구하기 🍄
+```
+select CAR_ID
+        , round(avg(datediff(END_DATE,START_DATE)+1),1) as AVERAGE_DURATION
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+group by 1
+having AVERAGE_DURATION >= 7
+order by 2 desc, 1 desc ;
+```
+
+9. 조건에 맞는 사원 정보 조회하기
+```
+select G.SCORE, E.EMP_NO, E.EMP_NAME, E.POSITION, E.EMAIL
+from HR_EMPLOYEES E
+right join (
+            select EMP_NO, sum(SCORE) as SCORE
+            from HR_GRADE 
+            where YEAR = 2022
+            group by 1 
+            order by 2 desc 
+            limit 1 
+            ) G
+on E.EMP_NO = G.EMP_NO ;
+```
+
 
