@@ -209,7 +209,16 @@ order by CAR_TYPE asc ;
 | \|         | OR 연산자 역할                | `cat|dog` → i have a cat, dog is good |
 
 
-
+## Lv. 3
+17. 없어진 기록 찾기
+```
+select O.ANIMAL_ID, O.NAME
+from ANIMAL_OUTS O
+left join ANIMAL_INS I
+on O.ANIMAL_ID = I.ANIMAL_ID 
+where I.ANIMAL_ID is null 
+order by 1 ;
+```
 
 
 
