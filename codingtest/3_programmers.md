@@ -143,4 +143,76 @@ group by 1
 order by 1 desc ;
 ```
 
+13. 업그레이드 된 아이템 구하기 🍄
+```
+select I.ITEM_ID, I.ITEM_NAME, I.RARITY 
+from ITEM_INFO I
+left join ITEM_TREE T
+on I.ITEM_ID = T.ITEM_ID 
+where T.PARENT_ITEM_ID in (select ITEM_ID
+                          from ITEM_INFO
+                          where RARITY = 'RARE') 
+order by 1 desc ; 
+```
+```sql
+SELECT ITEM_ID, ITEM_NAME, RARITY
+FROM ITEM_INFO
+WHERE ITEM_ID IN (SELECT DISTINCT B.ITEM_ID
+                    FROM ITEM_INFO A
+                    JOIN ITEM_TREE B
+                    ON A.ITEM_ID = B.PARENT_ITEM_ID
+                    WHERE A.RARITY = 'RARE')
+ORDER BY ITEM_ID DESC
+```
+
+14. 분기별 분화된 대장균의 개체 수 구하기
+```sql
+select concat(QUARTER(DIFFERENTIATION_DATE),'Q') as QUARTER
+       , count(1) as ECOLI_COUNT
+from ECOLI_DATA
+group by 1
+order by 1 asc ; 
+```
+
+15. 재구매가 일어난 상품과 회원 리스트 구하기
+```
+select USER_ID, PRODUCT_ID
+from ONLINE_SALE 
+group by 1,2 
+having count(1) >= 2
+order by USER_ID asc, PRODUCT_ID desc ; 
+```
+
+16. 자동차 종류 별 특정 옵션이 포함된 자동차 수 구하기 🍄
+'통풍시트', '열선시트', '가죽시트' 중 하나 이상의 옵션이 포함된 자동차가 자동차 종류 별로 몇 대인지 출력
+```
+select CAR_TYPE, count(CAR_ID) as CARS
+from CAR_RENTAL_COMPANY_CAR
+where OPTIONS regexp '통풍시트|열선시트|가죽시트'
+group by CAR_TYPE
+order by CAR_TYPE asc ; 
+```
+
+### REGEXP  
+| 기호       | 설명                          | 예시                          |
+|------------|-------------------------------|-------------------------------|
+| .          | 임의의 한 문자와 일치         | `a.b` → acb, a_b             |
+| ^          | 문자열의 시작을 의미          | `^hello` → hello world, hello hi |
+| $          | 문자열의 끝을 의미            | `world$` → hello word, hi word |
+| *          | 앞의 문자가 0번 이상 반복됨   | `ab*c` → ac, abc, abbc, abbbc |
+| +          | 앞의 문자가 1번 이상 반복됨   | `ab+c` → abc, abbc, ac (x)   |
+| ?          | 앞의 문자가 0번 또는 1번 나타남| `colou?r` → color, colour    |
+| [abc]      | 'a', 'b', 'c' 중 하나와 일치  | `[abc]` → apple, banana, cherry |
+| [a-z]      | 소문자 알파벳 중 하나와 일치  | `[a-z]`                      |
+| [A-Z]      | 대문자 알파벳 중 하나와 일치  | `[A-Z]`                      |
+| [0-9]      | 숫자 중 하나와 일치           | `[0-9]`                      |
+| \|         | OR 연산자 역할                | `cat|dog` → i have a cat, dog is good |
+
+
+
+
+
+
+
+
 
