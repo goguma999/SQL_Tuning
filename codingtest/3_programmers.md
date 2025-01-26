@@ -219,9 +219,51 @@ on O.ANIMAL_ID = I.ANIMAL_ID
 where I.ANIMAL_ID is null 
 order by 1 ;
 ```
-
-
-
-
-
-
+18. 있었는데요 없었습니다
+```
+select I.ANIMAL_ID, I.NAME
+from ANIMAL_INS I 
+join ANIMAL_OUTS O 
+on I.ANIMAL_ID = O.ANIMAL_ID
+where I.DATETIME > O.DATETIME
+order by I.DATETIME asc ; 
+```
+19. 오랜 기간 보호한 동물(1)
+```
+select I.NAME, I.DATETIME 
+from ANIMAL_INS I
+left join ANIMAL_OUTS O
+on I.ANIMAL_ID = O.ANIMAL_ID 
+where O.DATETIME is null 
+order by I.DATETIME asc
+limit 3 ;
+```
+20. 오랜 기간 보호한 동물(2)
+```
+select O.ANIMAL_ID, O.NAME
+from ANIMAL_OUTS O
+left join ANIMAL_INS I 
+on O.ANIMAL_ID = I.ANIMAL_ID
+order by O.DATETIME - I.DATETIME  desc 
+limit 2 
+```
+21. 조건별로 분류하여 주문상태 출력하기
+```
+SELECT ORDER_ID, PRODUCT_ID, date_format(OUT_DATE,'%Y-%m-%d') as OUT_DATE, 
+    CASE 
+    WHEN OUT_DATE <= '2022-05-01' THEN '출고완료'
+    WHEN OUT_DATE > '2022-05-01' THEN '출고대기'
+    ELSE '출고미정' END as 출고여부
+FROM FOOD_ORDER 
+ORDER BY ORDER_ID asc ; 
+```
+22. 헤비 유저가 소유한 장소
+```
+SELECT ID, NAME, HOST_ID
+FROM PLACES
+WHERE HOST_ID IN (SELECT HOST_ID 
+           FROM PLACES 
+           GROUP BY HOST_ID
+           HAVING COUNT(1) >= 2 ) 
+ORDER BY ID ; 
+```
