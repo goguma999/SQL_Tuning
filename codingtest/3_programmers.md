@@ -2,6 +2,19 @@
 ## Lv. 1~2 
 1. 자동차 대여 기록에서 장기/단기 대여 구분하기
 ```
+SELECT 
+    HISTORY_ID
+    , CAR_ID
+    , date_format(START_DATE,'%Y-%m-%d') as START_DATE
+    , date_format(END_DATE,'%Y-%m-%d') as END_DATE
+    , CASE
+    WHEN DATEDIFF(END_DATE, START_DATE) + 1 >= 30 THEN '장기 대여'
+    ELSE '단기 대여'
+    END AS RENT_TYPE 
+FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+WHERE START_DATE >= '2022-09-01' 
+  AND START_DATE < '2022-10-01'
+ORDER BY HISTORY_ID desc ; 
 ```
 
 2. 특정 형질을 가지는 대장균 찾기
@@ -267,3 +280,25 @@ WHERE HOST_ID IN (SELECT HOST_ID
            HAVING COUNT(1) >= 2 ) 
 ORDER BY ID ; 
 ```
+23. 카테고리 별 도서 판매량 집계하기
+```
+SELECT B.CATEGORY, SUM(S.SALES) as TOTAL_SALES 
+FROM BOOK_SALES S
+JOIN BOOK B
+ON S.BOOK_ID = B.BOOK_ID 
+WHERE SALES_DATE like '2022-01%'
+GROUP BY B.CATEGORY
+ORDER BY CATEGORY asc ; 
+```
+24. 대여 기록이 존재하는 자동차 리스트 구하기
+```
+select distinct H.CAR_ID
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY H
+join CAR_RENTAL_COMPANY_CAR C 
+on H.CAR_ID = C.CAR_ID 
+where C.CAR_TYPE = '세단'
+  and ( H.START_DATE >= '2022-10-01' AND H.START_DATE < '2022-11-01' ) 
+order by CAR_ID desc ; 
+```
+
+
