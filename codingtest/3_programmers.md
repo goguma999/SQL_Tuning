@@ -300,5 +300,61 @@ where C.CAR_TYPE = '세단'
   and ( H.START_DATE >= '2022-10-01' AND H.START_DATE < '2022-11-01' ) 
 order by CAR_ID desc ; 
 ```
-
-
+25. 조건에 맞는 사용자와 총 거래금액 조회하기
+```
+SELECT U.USER_ID, U.NICKNAME, SUM(PRICE) AS TOTAL_SALES
+FROM USED_GOODS_BOARD B
+JOIN USED_GOODS_USER U
+ON B.WRITER_ID = U.USER_ID
+WHERE B.STATUS = 'DONE'
+GROUP BY 1, 2 
+HAVING SUM(PRICE) >= 700000 
+ORDER BY 3 asc ; 
+```
+26. 조건에 맞는 사용자 정보 조회하기
+```
+SELECT 
+    USER_ID,
+    NICKNAME,
+    CONCAT(CITY,' ', STREET_ADDRESS1, ' ',STREET_ADDRESS2) AS 전체주소,
+    CONCAT(left(TLNO,3),'-',substring(TLNO,4,4),'-',right(TLNO,4)) AS 전화번호
+FROM USED_GOODS_USER
+WHERE USER_ID IN ( SELECT distinct WRITER_ID
+                    FROM USED_GOODS_BOARD B
+                    GROUP BY WRITER_ID 
+                    HAVING COUNT(*) >= 3  
+                 )
+ORDER BY USER_ID desc ; 
+```
+```sql
+    CONCAT_WS(' ',CITY,STREET_ADDRESS1,STREET_ADDRESS2) AS 전체주소,
+    CONCAT_WS('-',left(TLNO,3),substring(TLNO,4,4),right(TLNO,4)) AS 전화번호
+```
+27. 조회수가 가장 많은 중고거래 게시판의 첨부파일 조회하기 🍄
+```
+SELECT 
+    CONCAT('/home/grep/src/',
+          BOARD_ID,
+          '/',
+          FILE_ID,
+          FILE_NAME,
+          FILE_EXT) as FILE_PATH
+FROM USED_GOODS_FILE 
+WHERE BOARD_ID = (
+                    SELECT BOARD_ID
+                    FROM USED_GOODS_BOARD
+                    WHERE VIEWS = (SELECT MAX(VIEWS)
+                                    FROM USED_GOODS_BOARD 
+                                   )
+                )
+ORDER BY FILE_ID desc ; 
+```
+28. 부서별 평균 연봉 조회하기
+```
+select E.DEPT_ID, D.DEPT_NAME_EN, round(avg(SAL)) as AVG_SAL
+from HR_EMPLOYEES E
+join HR_DEPARTMENT D
+on E.DEPT_ID = D.DEPT_ID 
+group by 1,2 
+order by 3 desc ; 
+```
