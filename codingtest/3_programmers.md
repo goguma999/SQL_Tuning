@@ -222,6 +222,33 @@ order by CAR_TYPE asc ;
 | \|         | OR 연산자 역할                | `cat|dog` → i have a cat, dog is good |
 
 
+33. 연도별 대장균 크기의 편차 구하기 
+```
+select B.YEAR, (B.maxsize - A.SIZE_OF_COLONY) as YEAR_DEV, A.ID 
+from ECOLI_DATA A
+join (
+        select YEAR(DIFFERENTIATION_DATE) as YEAR, 
+                MAX(SIZE_OF_COLONY)as maxsize
+        from ECOLI_DATA 
+        group by 1 
+    ) B
+on YEAR(A.DIFFERENTIATION_DATE) = B.YEAR 
+order by B.YEAR asc, YEAR_DEV asc ; 
+```
+```sql
+SELECT
+    YEAR(DIFFERENTIATION_DATE) AS YEAR
+    , (MAX_SIZE - SIZE_OF_COLONY) AS YEAR_DEV
+    , ID
+FROM (
+    SELECT 
+        *
+        , MAX(SIZE_OF_COLONY) OVER (PARTITION BY YEAR(DIFFERENTIATION_DATE)) AS MAX_SIZE
+    FROM ECOLI_DATA
+    ) AS M
+ORDER BY YEAR, YEAR_DEV
+```
+
 ## Lv. 3
 17. 없어진 기록 찾기
 ```
