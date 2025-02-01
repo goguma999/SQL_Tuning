@@ -358,3 +358,65 @@ on E.DEPT_ID = D.DEPT_ID
 group by 1,2 
 order by 3 desc ; 
 ```
+29. 특정 조건을 만족하는 물고기별 수와 최대 길이 구하기
+```
+select count(*) as FISH_COUNT, 
+        MAX(LENGTH) as MAX_LENGTH,
+        FISH_TYPE
+from FISH_INFO
+group by FISH_TYPE 
+having avg(ifnull(LENGTH,10)) >= 33
+order by FISH_TYPE asc ;
+```
+30. 대장균들의 자식의 수 구하기 🍄 
+```
+select C.ID, count(P.PARENT_ID) as CHILD_COUNT  
+from ECOLI_DATA C
+left join ECOLI_DATA P
+on C.ID = P.PARENT_ID
+group by C.ID
+order by C.ID asc ; 
+```
+31. 대장균의 크기에 따라 분류하기 1
+```
+select ID,
+    case
+    when SIZE_OF_COLONY <= 100 then 'LOW'
+    when SIZE_OF_COLONY <= 1000 then 'MEDIUM'
+    else 'HIGH' end as SIZE 
+from ECOLI_DATA
+order by ID asc ;
+```
+32. 대장균의 크기에 따라 분류하기 2 🍄
+```sql
+with qtl as (
+    select ID, 
+            ntile(4) over (order by SIZE_OF_COLONY) as quantile
+    from ECOLI_DATA )
+
+select ID,
+    case quantile
+    when 1 then 'LOW'
+    when 2 then 'MEDIUM'
+    when 3 then 'HIGH'
+    when 4 then 'CRITICAL'
+    end as COLONY_NAME
+from qtl
+order by ID asc ; 
+```
+```sql
+SELECT 
+    ID
+    , (CASE 
+        WHEN PER_RANK <= 0.25 THEN 'CRITICAL'
+        WHEN PER_RANK <= 0.5 THEN 'HIGH'
+        WHEN PER_RANK <= 0.75 THEN 'MEDIUM'
+        ELSE 'LOW'
+      END) AS COLONY_NAME
+FROM (SELECT 
+        ID, 
+        PERCENT_RANK() OVER (ORDER BY SIZE_OF_COLONY DESC) AS PER_RANK
+     FROM ECOLI_DATA
+     ) AS D
+ORDER BY ID
+```
