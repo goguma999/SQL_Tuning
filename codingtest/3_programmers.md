@@ -447,3 +447,67 @@ FROM (SELECT
      ) AS D
 ORDER BY ID
 ```
+34. 즐겨찾기가 가장 많은 식당 정보 출력하기
+```
+-- 윈도우 함수 사용1 
+select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
+from (
+        select *, rank() over (partition by FOOD_TYPE order by FAVORITES desc ) as favrnk
+        from REST_INFO 
+    ) foo
+where favrnk = 1 
+order by FOOD_TYPE desc ;
+```
+```
+-- 윈도우 함수 사용2 
+select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
+from (
+    select *, max(FAVORITES) over (partition by FOOD_TYPE) as maxfav
+    from REST_INFO
+    ) foo
+where FAVORITES = maxfav
+order by FOOD_TYPE desc ; 
+```
+```
+-- 서브쿼리 사용 | ( 컬럼 n개 ) in 가능 ✔️
+select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
+from REST_INFO
+where (FOOD_TYPE, FAVORITES) in (
+    select FOOD_TYPE, max(FAVORITES) 
+    from REST_INFO 
+    group by FOOD_TYPE 
+    )
+order by FOOD_TYPE desc ; 
+```
+35. 대여 횟수가 많은 자동차들의 월별 대여 횟수 구하기
+```
+select MONTH(START_DATE) as MONTH, CAR_ID, count(*) as RECORDS
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+where CAR_ID in (
+                select CAR_ID
+                from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+                where date_format(START_DATE,'%Y-%m-%d') >= '2022-08-01'
+                  and date_format(START_DATE,'%Y-%m-%d') < '2022-11-01'
+                group by CAR_ID
+                having count(*) >= 5 
+                )
+  and date_format(START_DATE,'%Y-%m-%d') >= '2022-08-01'
+  and date_format(START_DATE,'%Y-%m-%d') < '2022-11-01'
+group by MONTH(START_DATE), CAR_ID
+having RECORDS != 0 
+order by MONTH asc, CAR_ID desc ;
+
+
+BETWEEN AND 를 쓰자 . .
+```
+36. 업그레이드 할 수 없는 아이템 구하기
+```
+select I.ITEM_ID, I.ITEM_NAME, I.RARITY
+from ITEM_INFO I
+left join ITEM_TREE T
+on I.ITEM_ID = T.PARENT_ITEM_ID
+where T.PARENT_ITEM_ID is null 
+order by I.ITEM_ID desc ; 
+```
+
+
