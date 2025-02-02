@@ -480,7 +480,7 @@ where (FOOD_TYPE, FAVORITES) in (
 order by FOOD_TYPE desc ; 
 ```
 35. 대여 횟수가 많은 자동차들의 월별 대여 횟수 구하기
-```
+```sql
 select MONTH(START_DATE) as MONTH, CAR_ID, count(*) as RECORDS
 from CAR_RENTAL_COMPANY_RENTAL_HISTORY
 where CAR_ID in (
