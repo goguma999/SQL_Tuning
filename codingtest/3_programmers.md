@@ -509,5 +509,31 @@ on I.ITEM_ID = T.PARENT_ITEM_ID
 where T.PARENT_ITEM_ID is null 
 order by I.ITEM_ID desc ; 
 ```
-
+37. 물고기 종류 별 대어 찾기
+```
+select ID, FISH_NAME, LENGTH
+from (
+        select I.ID as ID, N.FISH_NAME as FISH_NAME, I.LENGTH as LENGTH, max(I.LENGTH) over (partition by I.FISH_TYPE) as maxlng
+        from FISH_INFO I
+        join FISH_NAME_INFO N 
+        on I.FISH_TYPE = N.FISH_TYPE
+    ) foo
+where LENGTH = maxlng 
+order by ID asc ;
+```
+## Lv. 4
+38. 보호소에서 중성화한 동물
+```
+select I.ANIMAL_ID, I.ANIMAL_TYPE, I.NAME 
+from ANIMAL_INS I
+join ANIMAL_OUTS O
+on I.ANIMAL_ID = O.ANIMAL_ID
+where I.SEX_UPON_INTAKE like 'Intact%'
+  and O.SEX_UPON_OUTCOME not like 'Intact%'
+order by ANIMAL_ID ;
+```
+```sql
+where I.SEX_UPON_INTAKE REGEXP 'INTACT'
+  and O.SEX_UPON_OUTCOME REGEXP 'Neutered|Spayed'
+```
 
