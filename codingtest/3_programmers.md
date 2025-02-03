@@ -536,4 +536,23 @@ order by ANIMAL_ID ;
 where I.SEX_UPON_INTAKE REGEXP 'INTACT'
   and O.SEX_UPON_OUTCOME REGEXP 'Neutered|Spayed'
 ```
-
+39. 우유와 요거트가 담긴 장바구니 🍄
+```sql
+select CART_ID
+from (
+    select CART_ID,
+        GROUP_CONCAT(NAME order by Name SEPARATOR ', ') as namelist
+    from CART_PRODUCTS
+    group by CART_ID 
+    ) foo
+where namelist REGEXP 'Milk.*Yogurt'
+order by CART_ID ;
+```
+```sql
+select CART_ID 
+from CART_PRODUCTS
+where NAME in ('Milk','Yogurt')
+group by CART_ID
+having count(distinct(NAME)) >= 2 
+order by CART_ID ; 
+```
