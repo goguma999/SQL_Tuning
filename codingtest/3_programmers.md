@@ -260,6 +260,17 @@ order by ID ;
 
 # 비트 연산자 & : 같은 비트 위치에서 1이 있는 부분만 남김 
 ```
+43. 부모의 형질을 모두 가지는 대장균 찾기 🍄
+```
+select C.ID, 
+    C.GENOTYPE as GENOTYPE, 
+    P.GENOTYPE as PARENT_GENOTYPE
+from ECOLI_DATA C
+join ECOLI_DATA P
+on C.PARENT_ID = P.ID 
+where (C.GENOTYPE & P.GENOTYPE) = P.GENOTYPE 
+order by C.ID asc ; 
+```
 
 ## Lv. 3
 17. 없어진 기록 찾기
