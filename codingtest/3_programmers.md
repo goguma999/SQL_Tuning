@@ -248,6 +248,18 @@ FROM (
     ) AS M
 ORDER BY YEAR, YEAR_DEV
 ```
+42. 조건에 맞는 개발자 찾기 🍄
+```sql
+select ID, EMAIL, FIRST_NAME, LAST_NAME
+from DEVELOPERS
+where SKILL_CODE & (select sum(CODE)
+                   from SKILLCODES
+                   where NAME IN ('Python','C#')
+                   )
+order by ID ;
+
+# 비트 연산자 & : 같은 비트 위치에서 1이 있는 부분만 남김 
+```
 
 ## Lv. 3
 17. 없어진 기록 찾기
