@@ -556,3 +556,26 @@ group by CART_ID
 having count(distinct(NAME)) >= 2 
 order by CART_ID ; 
 ```
+40. 5월 식품들의 총매출 조회하기
+```
+select O.PRODUCT_ID, P.PRODUCT_NAME, sum(O.AMOUNT*P.PRICE) as TOTAL_SALES
+from FOOD_ORDER O
+join FOOD_PRODUCT P
+on O.PRODUCT_ID = P.PRODUCT_ID
+where date_format(O.PRODUCE_DATE,'%Y-%m-%d') 
+        between '2022-05-01' and '2022-05-31'
+group by 1, 2      
+order by 3 desc, 1 asc ;
+
+PRODUCT_ID가 PK라면 ID에 대해 NAME이 여러개 존재하지 않기 때문에 group by 1 만 해도 됨
+```
+41. 서울에 위치한 식당 목록 출력하기
+```
+select R.REST_ID, I.REST_NAME, I.FOOD_TYPE, I.FAVORITES, I.ADDRESS, round(avg(R.REVIEW_SCORE),2) as SCORE 
+from REST_REVIEW R
+join REST_INFO I
+on R.REST_ID = I.REST_ID
+where ADDRESS like '서울%'
+group by 1 
+order by SCORE desc, I.FAVORITES desc ; 
+```
