@@ -17,8 +17,14 @@ WHERE START_DATE >= '2022-09-01'
 ORDER BY HISTORY_ID desc ; 
 ```
 
-2. 특정 형질을 가지는 대장균 찾기
-```
+2. 특정 형질을 가지는 대장균 찾기 🍄
+```sql
+select count(*) as COUNT
+from ECOLI_DATA
+where (GENOTYPE & 2) = 0 
+  and ( (GENOTYPE & 1) > 0 
+       or (GENOTYPE & 4) > 0 
+       ) ;
 ```
 
 3. 가격대 별 상품 개수 구하기 🍄  
@@ -544,6 +550,8 @@ from (
 where LENGTH = maxlng 
 order by ID asc ;
 ```
+
+
 ## Lv. 4
 38. 보호소에서 중성화한 동물
 ```
@@ -602,3 +610,15 @@ where ADDRESS like '서울%'
 group by 1 
 order by SCORE desc, I.FAVORITES desc ; 
 ```
+44. 년, 월, 성별 별 상품 구매 회원 수 구하기
+```
+select YEAR(S.sales_date) as YEAR, MONTH(S.sales_date) as MONTH,
+    I.gender as GENDER, count(distinct I.user_id) as USERS 
+from USER_INFO I
+join ONLINE_SALE S 
+on I.USER_ID = S.USER_ID
+where I.gender is not null
+group by 1,2,3
+order by 1,2,3 asc ; 
+```
+45. 
