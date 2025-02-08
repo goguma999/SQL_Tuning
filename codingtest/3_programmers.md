@@ -621,4 +621,84 @@ where I.gender is not null
 group by 1,2,3
 order by 1,2,3 asc ; 
 ```
-45. 
+45. 취소되지 않은 진료 예약 조회하기
+```
+select A.APNT_NO, P.PT_NAME, P.PT_NO, A.MCDP_CD, 
+        D.DR_NAME, A.APNT_YMD 
+from APPOINTMENT A
+join DOCTOR D on A.MDDR_ID = D.DR_ID 
+join PATIENT P on P.PT_NO = A.PT_NO 
+where A.APNT_CNCL_YN = 'N'
+  and D.MCDP_CD = 'CS'
+  and date_format(A.APNT_YMD,'%Y-%m-%d') = '2022-04-13'
+order by APNT_YMD asc ; 
+```
+46. 주문량이 많은 아이스크림들 조회하기 🍄
+```
+with t1 as (
+select FLAVOR, sum(TOTAL_ORDER) as sumorder
+from FIRST_HALF
+group by FLAVOR
+UNION ALL 
+select FLAVOR, sum(TOTAL_ORDER) as sumorder
+from JULY
+group by FLAVOR 
+    )
+    
+select FLAVOR
+from t1 
+group by 1
+order by sum(sumorder) desc 
+limit 3 ;
+```
+47. 저자 별 카테고리 별 매출액 집계하기
+```
+select A.AUTHOR_ID, A.AUTHOR_NAME, B.CATEGORY,
+        sum(S.SALES*B.PRICE) as TOTAL_SALES 
+from BOOK_SALES S
+join BOOK B on S.BOOK_ID = B.BOOK_ID
+join AUTHOR A on B.AUTHOR_ID = A.AUTHOR_ID
+where date_format(SALES_DATE,'%Y-%m') = '2022-01'
+group by 1,2,3 
+order by 1, 3 desc ;
+```
+48. 연간 평가점수에 해당하는 평가 등급 및 성과금 조회하기 🍄
+```
+with t1 as (
+select EMP_NO, avg(SCORE) as avgscore
+from HR_GRADE
+group by 1)
+
+select E.EMP_NO, E.EMP_NAME, 
+    case 
+    when t1.avgscore >= 96 then 'S'
+    when t1.avgscore >= 90 then 'A'
+    when t1.avgscore >= 80 then 'B'
+    else 'C' end as GRADE,
+    if(t1.avgscore>=96, E.SAL*0.2, 
+        if(t1.avgscore>=90, E.SAL*0.15,
+          if(t1.avgscore>=80, E.SAL*0.1,0))) as BONUS 
+from HR_EMPLOYEES E 
+join t1 on E.EMP_NO = t1.EMP_NO ; 
+```
+```
+select E.EMP_NO, E.EMP_NAME, G.GRADE,
+    case G.GRADE
+    when 'S' then E.SAL*0.2 
+    when 'A' then E.SAL*0.15
+    when 'B' then E.SAL*0.1
+    else 0 end as BONUS 
+from HR_EMPLOYEES E
+join (
+    select EMP_NO, 
+        case 
+        when avg(SCORE) >= 96 then 'S'
+        when avg(SCORE) >= 90 then 'A'
+        when avg(SCORE) >= 80 then 'B'
+        else 'C' end as GRADE 
+    from HR_GRADE
+    group by EMP_NO 
+        ) G 
+on G.EMP_NO = E.EMP_NO ;
+```
+
