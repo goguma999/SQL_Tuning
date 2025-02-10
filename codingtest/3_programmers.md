@@ -228,8 +228,9 @@ order by CAR_TYPE asc ;
 | \|         | OR 연산자 역할                | `cat|dog` → i have a cat, dog is good |
 
 
-33. 연도별 대장균 크기의 편차 구하기 
-```
+33. 연도별 대장균 크기의 편차 구하기 🍄
+```sql 
+# 1. GROUP BY + JOIN 
 select B.YEAR, (B.maxsize - A.SIZE_OF_COLONY) as YEAR_DEV, A.ID 
 from ECOLI_DATA A
 join (
@@ -242,6 +243,7 @@ on YEAR(A.DIFFERENTIATION_DATE) = B.YEAR
 order by B.YEAR asc, YEAR_DEV asc ; 
 ```
 ```sql
+# 2. 윈도우 함수 + 서브쿼리
 SELECT
     YEAR(DIFFERENTIATION_DATE) AS YEAR
     , (MAX_SIZE - SIZE_OF_COLONY) AS YEAR_DEV
@@ -254,6 +256,19 @@ FROM (
     ) AS M
 ORDER BY YEAR, YEAR_DEV
 ```
+```sql
+# 3. 순수 윈도우 함수 
+select YEAR(DIFFERENTIATION_DATE) as YEAR,
+        max(SIZE_OF_COLONY) over (partition by YEAR(DIFFERENTIATION_DATE)) - SIZE_OF_COLONY as YEAR_DEV,
+        ID
+from ECOLI_DATA
+order by 1 asc, 2 asc ; 
+```
+```
+- #1: 수백만~수천만 행 이상의 대용량 데이터라면 group by + join. YEAR(DIFFERENTIATION_DATE), SIZE_OF_COLONY 복합 인덱스 활용 해서 성능 저하 방지 필요
+- #3: 수십만 행 이하 작은 데이터라면 윈도우 함수. 테이블을 한 번만 읽어서 빠름. 모든 행에 대해 max over 연산 비용 클 수 있음
+```
+
 42. 조건에 맞는 개발자 찾기 🍄
 ```sql
 select ID, EMAIL, FIRST_NAME, LAST_NAME
@@ -264,7 +279,8 @@ where SKILL_CODE & (select sum(CODE)
                    )
 order by ID ;
 
-# 비트 연산자 & : 같은 비트 위치에서 1이 있는 부분만 남김 
+# 비트 연산자 & : 같은 비트 위치에서 1이 있는 부분만 남김
+# & 쓰려면 BIN 안 해도 됨 !! 
 ```
 43. 부모의 형질을 모두 가지는 대장균 찾기 🍄
 ```
@@ -700,5 +716,35 @@ join (
     group by EMP_NO 
         ) G 
 on G.EMP_NO = E.EMP_NO ;
+```
+49. 특정 기간동안 대여 가능한 자동차들의 대여비용 구하기 🍄
+```
+select C.CAR_ID, 
+        C.CAR_TYPE,
+        floor((daily_fee*(100-DISCOUNT_RATE)/100) * 30) as FEE 
+from CAR_RENTAL_COMPANY_CAR C 
+join (select CAR_TYPE, DURATION_TYPE, DISCOUNT_RATE
+        from CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+        where CAR_TYPE in ('SUV','세단')
+          and DURATION_TYPE like '30%'
+     ) P
+on C.CAR_TYPE = P.CAR_TYPE
+where C.CAR_ID not in (
+    select distinct car_id 
+    from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+    where '2022-11' between date_format(START_DATE,'%Y-%m') and date_format(END_DATE,'%Y-%m')
+    order by START_DATE asc
+    )
+  and (daily_fee*(100-DISCOUNT_RATE)/100) * 30 between 500000 and 2000000
+order by 3 desc, 2 asc, 1 desc ;  
+```
+```sql
+SELECT C.CAR_ID, C.CAR_TYPE, ROUND(C.DAILY_FEE*30*(1-P.DISCOUNT_RATE/100)) AS FEE
+FROM CAR_RENTAL_COMPANY_CAR C
+LEFT JOIN CAR_RENTAL_COMPANY_RENTAL_HISTORY H ON C.CAR_ID = H.CAR_ID
+LEFT JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN P ON C.CAR_TYPE = P.CAR_TYPE AND P.DURATION_TYPE = '30일 이상'
+WHERE C.CAR_TYPE IN ('SUV', '세단')
+GROUP BY C.CAR_ID, C.CAR_TYPE
+HAVING MIN(H.START_DATE) > '2022-11-30' OR MAX(H.END_DATE) < '2022-11-01' AND FEE BETWEEN 500000 AND 2000000
 ```
 
