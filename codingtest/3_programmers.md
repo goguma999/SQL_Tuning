@@ -440,7 +440,7 @@ group by FISH_TYPE
 having avg(ifnull(LENGTH,10)) >= 33
 order by FISH_TYPE asc ;
 ```
-30. 대장균들의 자식의 수 구하기 🍄 
+30. 대장균들의 자식의 수 구하기 🍄🍄 
 ```
 select C.ID, count(P.PARENT_ID) as CHILD_COUNT  
 from ECOLI_DATA C
@@ -492,7 +492,7 @@ FROM (SELECT
      ) AS D
 ORDER BY ID
 ```
-34. 즐겨찾기가 가장 많은 식당 정보 출력하기
+34. 즐겨찾기가 가장 많은 식당 정보 출력하기 🍄
 ```
 -- 윈도우 함수 사용1 
 select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
@@ -513,8 +513,8 @@ from (
 where FAVORITES = maxfav
 order by FOOD_TYPE desc ; 
 ```
-```
--- 서브쿼리 사용 | ( 컬럼 n개 ) in 가능 ✔️
+```sql
+-- 서브쿼리 사용 | ( 컬럼 n개 ) in 가능 | 이게 더 성능이 좋다
 select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
 from REST_INFO
 where (FOOD_TYPE, FAVORITES) in (
@@ -545,7 +545,7 @@ order by MONTH asc, CAR_ID desc ;
 
 BETWEEN AND 를 쓰자 . .
 ```
-36. 업그레이드 할 수 없는 아이템 구하기
+36. 업그레이드 할 수 없는 아이템 구하기 🍄
 ```
 select I.ITEM_ID, I.ITEM_NAME, I.RARITY
 from ITEM_INFO I
@@ -565,6 +565,19 @@ from (
     ) foo
 where LENGTH = maxlng 
 order by ID asc ;
+```
+```
+select I.ID, N.FISH_NAME, LENGTH 
+from FISH_NAME_INFO N
+join (
+        select ID, FISH_TYPE, LENGTH 
+        from FISH_INFO
+        where (FISH_TYPE, LENGTH) in (select FISH_TYPE, max(LENGTH)
+                                     from FISH_INFO
+                                     group by 1)
+    ) I 
+on N.FISH_TYPE = I.FISH_TYPE
+order by 1 ; 
 ```
 
 
