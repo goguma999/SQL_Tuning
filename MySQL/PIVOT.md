@@ -15,7 +15,7 @@ GROUP BY year;
 -- 1) GROUP_CONCAT()을 사용하여 `CASE WHEN` 구문 자동 생성
 SET SESSION group_concat_max_len = 1000000;
 
-SET @sql = NULL;
+SET @sql = NULL;     # @sql: MySQL에서 문자열을 저장하는 사용자 정의 변수
 
 SELECT GROUP_CONCAT(DISTINCT 
     CONCAT('SUM(CASE WHEN month = ''', month, ''' THEN sales ELSE 0 END) AS `', month, '`')
