@@ -760,4 +760,15 @@ WHERE C.CAR_TYPE IN ('SUV', '세단')
 GROUP BY C.CAR_ID, C.CAR_TYPE
 HAVING MIN(H.START_DATE) > '2022-11-30' OR MAX(H.END_DATE) < '2022-11-01' AND FEE BETWEEN 500000 AND 2000000
 ```
-
+50. FrontEnd 개발자 찾기
+```
+select ID, EMAIL, FIRST_NAME, LAST_NAME
+from DEVELOPERS 
+where SKILL_CODE & (select sum(CODE) 
+                    from SKILLCODES
+                    where CATEGORY = 'Front End') > 0
+order by ID asc ; 
+```
+51. 언어별 개발자 분류하기 🍄 Case When 말고 다른 방법으로 
+```
+```
