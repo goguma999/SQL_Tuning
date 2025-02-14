@@ -4,6 +4,10 @@
 Query the two cities in STATION with the shortest and longest CITY names, as well as their respective lengths (i.e.: number of characters in the name). <br>
 If there is more than one smallest or largest city, choose the one that comes first when ordered alphabetically.
 ```
+min, max
+```
+```
+order by 
 ```
 
 2. Weather Observation Station 6
@@ -229,6 +233,18 @@ from (select count(*) as occupation_cnt, occupation
 ```
 
 22. Occupations 🍄
--- pivot. 직업별 컬럼 만들고 이름 정렬
-```
+```sql 
+select 
+    max(case when Occupation = 'Doctor' then Name end),
+    max(case when Occupation = 'Professor' then Name end),
+    max(case when Occupation = 'Singer' then Name end),
+    max(case when Occupation = 'Actor' then Name end) 
+from (
+    select *,
+        Row_number() over (partition by Occupation order by Name) as rownum
+    from Occupations 
+    ) rn 
+group by rownum
+order by rownum
+;
 ```
