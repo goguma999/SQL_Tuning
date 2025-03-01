@@ -117,7 +117,7 @@ order by 1,2 ;
 
 5. 결론도출
     
-    !<img src="img/cohort3.png" alt="cohort3" width="600">       
+    <img src="img/cohort3.png" alt="cohort3" width="1000">       
         
     - 특가상품 구매 코호트가 1주가 지난 시점부터 높은 리텐션을 보임
         - 구매한 고객과  구매 안 한 고객 차이가 20%이상의 큰 차이. 유의미한 차이.
