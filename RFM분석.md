@@ -53,7 +53,7 @@
             RFM 점수 산출           이탈여부 확인
     ```
     
-6. python 코드
+6. python 으로 분석하기
 
 ```python
 import pandas as pd
@@ -103,7 +103,7 @@ coef = pd.DataFrame({'features': x.columns, 'coefficient':model.coef_[0]})
 coef
 ```
 
-| features | coefficienc |
+| features | coefficient |
 | --- | --- |
 | recency | -0.060135 |
 | frequency | 0.082922 |
