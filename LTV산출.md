@@ -65,7 +65,7 @@
     order by 1,2 ;
     ```
     
-    <img src="img/ltv1.png" alt="ltv1" width="400">
+    <img src="img/ltv1.png" alt="ltv1" width="600">
     
     ```python
     import pandas as pd
