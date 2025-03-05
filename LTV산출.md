@@ -25,7 +25,7 @@
     | 5월 (M-4) |          | 25%   | 36,823  | 9,205   |
     | 6월 (M-5) |          | 23%   | 37,723  | 8,676   |
 
-**20대 1월 첫주문자의 6개월 누적 LTV: 83,331**
+    **20대 1월 첫주문자의 6개월 누적 LTV: 83,331**
 
     
 3. SQL 로 분석하기
@@ -65,7 +65,7 @@
     order by 1,2 ;
     ```
     
-    ![ltv1.png](img/ltv1.png)
+    <img src="img/ltv1.png" alt="ltv1" width="400">
     
     ```python
     import pandas as pd
